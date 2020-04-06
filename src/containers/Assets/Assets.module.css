@@ -1,0 +1,14 @@
+.Assets,
+.Assets tr {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.Assets {
+  width: 90%;
+  margin: auto;
+}
+
+.Assets td {
+  padding: 10px;
+}
