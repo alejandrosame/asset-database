@@ -1,61 +1,32 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-import * as actions from './store/actions';
 import asyncComponent from './hoc/asyncComponent/asyncComponent';
-
-import Assets from './containers/Assets/Assets';
-import Layout from './containers/Layout/Layout';
 
 import './App.css';
 
-const AsyncAuth = asyncComponent(() => {
-  return import('./components/Auth/Auth');
+const AsyncPrivate = asyncComponent(() => {
+  return import('./containers/Private/Private');
 });
 
-class App extends React.Component {
+const AsyncPublic = asyncComponent(() => {
+  return import('./containers/Public/Public');
+});
 
-  componentDidMount() {
-    this.props.onTryAutoSignup();
-  }
+const App = () => {
+  let routes = (
+    <Switch>
+      <Route path="/" exact component={AsyncPublic} />
+      <Route path="/private" component={AsyncPrivate} />
+      <Redirect to="/" />
+    </Switch>
+  );
 
-  render() {
-    let routes = (
-      <Switch>
-        <Route path="/" exact component={Assets} />
-        <Route path="/private" exact render={() => {
-          let content = <AsyncAuth />;
-          if (this.props.isAuthenticated){
-            content = <h1>Welcome to private area</h1>
-          }
-          return content;
-        }} />
-        <Redirect to="/" />
-      </Switch>
-    );
-
-    return (
-      <div className="App">
-        <Layout>
-          {routes}
-        </Layout>
-      </div>
-    );
-  }
-
+  return (
+    <div className="App">
+      {routes}
+    </div>
+  );
 }
 
-const mapStateToProps = state => {
-  return {
-    isAuthenticated: state.auth.token !== null
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onTryAutoSignup: () => dispatch(actions.authCheckState())
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
