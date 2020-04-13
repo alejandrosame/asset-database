@@ -55,26 +55,9 @@ class Assets extends React.Component {
         };
 
         this.onSetResult(result, page);
-
-        /*
-        if (Math.random() > 0.9){
-          console.log("success");
-          this.onSetResult(result, page);
-        } else {
-          console.log("error");
-          this.onSetError();
-        }
-        */
       },
       3000
     )
-
-    /*
-    fetch(getHackerNewsUrl(value, page))
-      .then(response => response.json())
-      .then(result => this.onSetResult(result, page))
-      .catch(this.onSetError);
-    */
   }
 
   onSetError = () =>
