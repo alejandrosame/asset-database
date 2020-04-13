@@ -1,0 +1,14 @@
+.Header {
+  background-color: #ccc;
+  margin: auto;
+  height: 60px;
+}
+
+.Header h1 {
+  height: 100%;
+  margin: auto auto;
+}
+
+.Content {
+  padding-top: 10px;
+}
