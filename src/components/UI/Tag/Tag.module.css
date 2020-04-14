@@ -1,0 +1,13 @@
+.Tag {
+  background: #CCC;
+  border: 1px solid #777;
+  margin: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  box-sizing: content-box;
+}
+
+.Tag span {
+  white-space: nowrap;
+}
