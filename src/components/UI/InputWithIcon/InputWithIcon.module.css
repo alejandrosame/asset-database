@@ -1,8 +1,11 @@
-.AddTag {
+.InputWithIcon {
   position: relative;
+  width: 250px;
+  height: 2em;
+  display: inline-block;
 }
 
-.AddTag input {
+.InputWithIcon input {
   outline: none;
   border: 1px solid #ccc;
   background-color: white;
@@ -12,11 +15,11 @@
   /* icon width + icon padding-left + desired separation*/
   padding-left: calc(1em + 10px + 8px);
   height: 2em;
-  width: 250px;
+  width: 100%;
   box-sizing: border-box;
 }
 
-.AddTag svg {
+.InputWithIcon svg {
   display: inline-block;
   width: 1.5em;
   height: 1.5em;
@@ -29,7 +32,7 @@
   color: black;
 }
 
-.AddTag input:focus {
+.InputWithIcon input:focus {
   outline: none;
   background-color: #ccc;
 }

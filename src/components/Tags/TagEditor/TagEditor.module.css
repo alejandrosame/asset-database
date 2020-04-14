@@ -1,0 +1,13 @@
+.TagEditor {
+  width: 90%;
+  margin: auto;
+  margin-top: 40px;
+  text-align: left;
+}
+
+.Editor {
+  height: 250px;
+  border: 1px solid black;
+  display: block;
+  overflow-y: auto;
+}
