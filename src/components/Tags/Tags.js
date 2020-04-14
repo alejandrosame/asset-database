@@ -25,6 +25,8 @@ class Tags extends React.Component {
   state = {
     tags: [],
     products: [],
+    tagsFilter: '',
+    productsFilter: '',
     page: null,
     isError: false,
     isLoading: false,
@@ -58,21 +60,14 @@ class Tags extends React.Component {
     )
   }
 
-  onSetError = () =>
-    this.setState(applySetError);
+  onSetError = () => this.setState(applySetError);
 
   onSetResult = (result) => this.setState(applySetResult(result));
 
   onKeyPress = (event, actionFn) =>
-  {
-    console.log('onKeyPress', actionFn);
-
-    return(
-      event.key === 'Enter'
+    event.key === 'Enter'
       ? actionFn(event.target.value)
       : null
-    )
-  }
 
   onAddTag = (collection) => (tagValue) =>{
     const newCollection = update(this.state[collection], {
@@ -85,22 +80,36 @@ class Tags extends React.Component {
     this.setState( { [collection]: newCollection } );
   }
 
+  onAddFilter = (collection) => (filterValue) =>
+    this.setState( { [`${collection}Filter`]: filterValue } );
+
+  filterTags = (collection) =>
+    this.state[collection].filter(tag =>
+      tag.value.toLowerCase()
+      .includes(this.state[`${collection}Filter`].toLowerCase())
+    );
+
   render() {
     let content = (
       <React.Fragment>
-        <h2>Welcome to tag management</h2>
         <div>
           <TagEditor
             label="Products"
-            tags={this.state.products}
+            tags={this.filterTags("products")}
             onKeyPressAdd={(event) => this.onKeyPress(event, this.onAddTag("products"))}
+            onKeyPressSearch={
+              (event) => this.onKeyPress(event, this.onAddFilter("products"))
+            }
           />
         </div>
         <div>
           <TagEditor
             label="Tags"
-            tags={this.state.tags}
+            tags={this.filterTags("tags")}
             onKeyPressAdd={(event) => this.onKeyPress(event, this.onAddTag("tags"))}
+            onKeyPressSearch={
+              (event) => this.onKeyPress(event, this.onAddFilter("tags"))
+            }
           />
         </div>
       </React.Fragment>
