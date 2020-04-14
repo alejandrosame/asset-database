@@ -1,3 +1,4 @@
+import update from 'immutability-helper';
 import React from 'react';
 
 import TagEditor from './TagEditor/TagEditor';
@@ -62,9 +63,27 @@ class Tags extends React.Component {
 
   onSetResult = (result) => this.setState(applySetResult(result));
 
-  onKeyPress = (event) => event.key === 'Enter'
-    ? console.log(event.target.value)
-    : null;
+  onKeyPress = (event, actionFn) =>
+  {
+    console.log('onKeyPress', actionFn);
+
+    return(
+      event.key === 'Enter'
+      ? actionFn(event.target.value)
+      : null
+    )
+  }
+
+  onAddTag = (collection) => (tagValue) =>{
+    const newCollection = update(this.state[collection], {
+      $push: [{
+        id: this.state[collection].length,
+        value: tagValue
+      }]}
+    );
+
+    this.setState( { [collection]: newCollection } );
+  }
 
   render() {
     let content = (
@@ -74,14 +93,14 @@ class Tags extends React.Component {
           <TagEditor
             label="Products"
             tags={this.state.products}
-            onKeyPress={(event) => this.onKeyPress(event)}
+            onKeyPressAdd={(event) => this.onKeyPress(event, this.onAddTag("products"))}
           />
         </div>
         <div>
           <TagEditor
             label="Tags"
             tags={this.state.tags}
-            onKeyPress={(event) => this.onKeyPress(event)}
+            onKeyPressAdd={(event) => this.onKeyPress(event, this.onAddTag("tags"))}
           />
         </div>
       </React.Fragment>

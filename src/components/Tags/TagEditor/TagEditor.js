@@ -7,18 +7,18 @@ import classes from './TagEditor.module.css';
 
 
 
-const tagEditor = ({ tags, label, onKeyPress }) =>
+const tagEditor = ({ tags, label, onKeyPressAdd, onKeyPressSearch }) =>
   <div className={classes.TagEditor}>
     <h2>{label}</h2>
     <div className={classes.Editor}>
       <div className={classes.ActionBar}>
         <InputWithIcon
           icon='add'
-          keyPressed={onKeyPress}/>
+          keyPressed={onKeyPressAdd}/>
 
         <InputWithIcon
           icon='search'
-          keyPressed={onKeyPress} />
+          keyPressed={onKeyPressSearch} />
       </div>
       {
         tags.map(tag => {
