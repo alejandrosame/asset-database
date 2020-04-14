@@ -1,0 +1,35 @@
+.AddTag {
+  position: relative;
+}
+
+.AddTag input {
+  outline: none;
+  border: 1px solid #ccc;
+  background-color: white;
+  font: inherit;
+  padding: 6px 10px;
+  margin: auto;
+  /* icon width + icon padding-left + desired separation*/
+  padding-left: calc(1em + 10px + 8px);
+  height: 2em;
+  width: 250px;
+  box-sizing: border-box;
+}
+
+.AddTag svg {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  stroke: black;
+  fill: black;
+  position: absolute;
+  top: 47%;
+  left: 5px;
+  transform: translateY(-50%);
+  color: black;
+}
+
+.AddTag input:focus {
+  outline: none;
+  background-color: #ccc;
+}
