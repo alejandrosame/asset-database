@@ -9,5 +9,24 @@
 }
 
 .Tag span {
+  display: inline-flex;
+  vertical-align: middle;
   white-space: nowrap;
+  margin: auto;
+}
+
+.Tag svg {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  width: 1.5em;
+  height: 1.5em;
+  stroke: black;
+  fill: black;
+  color:black;
+  padding-left: 5px;
+}
+
+.Tag svg:hover {
+  cursor: pointer;
 }

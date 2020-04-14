@@ -1,13 +1,13 @@
 import React from 'react';
 
-import CrossMark from '../CrossMark/CrossMark';
+import { MdClear } from 'react-icons/md';
 
 import classes from './Tag.module.css';
 
-const tag = ({ children, clicked }) =>
+const tag = ({ children, onDelete }) =>
   <span className={classes.Tag}>
     <span>{children}</span>
-    <CrossMark onClick={clicked} />
+    <MdClear onClick={() => onDelete()} />
   </span>
 
 

@@ -70,9 +70,10 @@ class Tags extends React.Component {
       : null
 
   onAddTag = (collection) => (tagValue) =>{
+    const lastItem = this.state[collection].slice(-1)[0];
     const newCollection = update(this.state[collection], {
       $push: [{
-        id: this.state[collection].length,
+        id: lastItem? lastItem.id + 1 : 0,
         value: tagValue
       }]}
     );
@@ -80,7 +81,13 @@ class Tags extends React.Component {
     this.setState( { [collection]: newCollection } );
   }
 
+  onDeleteTag = (collection) => (idx) => {
+    const newCollection = update(this.state[collection], { $splice: [[idx, 1]] });
+    this.setState( { [collection]: newCollection } );
+  }
+
   onAddFilter = (collection) => (filterValue) =>
+
     this.setState( { [`${collection}Filter`]: filterValue } );
 
   filterTags = (collection) =>
@@ -100,6 +107,7 @@ class Tags extends React.Component {
             onKeyPressSearch={
               (event) => this.onKeyPress(event, this.onAddFilter("products"))
             }
+            onDelete={(tagIdx) => this.onDeleteTag("products")(tagIdx)}
           />
         </div>
         <div>
@@ -110,6 +118,7 @@ class Tags extends React.Component {
             onKeyPressSearch={
               (event) => this.onKeyPress(event, this.onAddFilter("tags"))
             }
+            onDelete={(tagIdx) => this.onDeleteTag("tags")(tagIdx)}
           />
         </div>
       </React.Fragment>
