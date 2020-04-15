@@ -1,14 +1,15 @@
 .Header {
-  background-color: #ccc;
   margin: auto;
   height: 60px;
+  text-align: justify;
+  letter-spacing: 1px;
+  background-color: #AAAAAA;
 }
 
-.Header h1 {
-  height: 100%;
-  margin: auto auto;
+.Header nav {
+  display: inline-block;
 }
 
 .Content {
-  padding-top: 10px;
+  padding-top: 80px;
 }

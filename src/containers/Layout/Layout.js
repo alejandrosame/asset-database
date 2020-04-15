@@ -1,15 +1,17 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 
 import classes from './Layout.module.css';
 
 class Layout extends React.Component {
 
+
   render(){
     return (
       <React.Fragment>
-        <header className={classes.Header}>
-          <h1> Arcknight monsters </h1>
-        </header>
+        <Toolbar {...this.props}/>
         <main className={classes.Content}>
           {this.props.children}
         </main>
@@ -18,4 +20,10 @@ class Layout extends React.Component {
   }
 }
 
-export default Layout;
+const mapStateToProps = state => {
+  return {
+    isAuthenticated: state.auth.token !== null,
+  }
+}
+
+export default connect(mapStateToProps)(Layout);
