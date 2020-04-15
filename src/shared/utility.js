@@ -36,7 +36,11 @@ export const checkValidity = (value, rules) => {
   return isValid;
 }
 
-const createControl = (controlType) => {
+const createControl = (_controlType) => {
+  let controlType = _controlType;
+  if (_controlType.type){
+    controlType = _controlType.type;
+  }
   switch (controlType) {
     case 'email':
       return {
@@ -69,6 +73,18 @@ const createControl = (controlType) => {
             minLength: 6
 
           },
+          valid: false,
+          touched: false
+        }
+      }
+    case 'checkbox':
+      return {
+        password: {
+          elementType: 'checkbox',
+          elementConfig: {
+            ..._controlType
+          },
+          value: '',
           valid: false,
           touched: false
         }

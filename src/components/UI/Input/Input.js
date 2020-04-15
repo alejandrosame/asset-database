@@ -46,6 +46,18 @@ const input = (props) => {
         </select>
         );
       break;
+    case ('checkbox'):
+      inputElement = (
+        <label>
+          <input
+            {...props.elementConfig}
+            value={props.elementConfig.name}
+            onChange={props.changed}
+          />
+          {props.elementConfig.label}
+        </label>
+      );
+      break;
     default:
       inputElement = <input
         className={inputClasses.join(' ')}
