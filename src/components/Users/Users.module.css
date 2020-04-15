@@ -1,0 +1,30 @@
+.Table {
+  max-width: 90%;
+  margin: auto;
+}
+
+.Table table {
+  width: 100%;
+}
+
+.Table-title {
+  text-align: left;
+}
+
+.Table table, th, tr, td  {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.Table th {
+  background-color: #DDD;
+  font: bold;
+}
+
+.Table th, td {
+  padding: 10px;
+}
+
+.Table td:last-child {
+  width: 350px;
+}
