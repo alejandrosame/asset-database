@@ -56,7 +56,7 @@ class Assets extends React.Component {
 
         this.onSetResult(result, page);
       },
-      3000
+      1000
     )
   }
 
