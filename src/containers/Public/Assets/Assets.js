@@ -1,9 +1,9 @@
 import React from 'react';
 
-import AdvancedTable from '../../hoc/AdvancedTable/AdvancedTable';
-import Asset from '../../components/Asset/Asset';
+import AdvancedTable from '../../../hoc/AdvancedTable/AdvancedTable';
+import assetMapper from './Asset/AssetMapper';
 
-import assetsData from '../../assets/data/assets.json';
+import assetsData from '../../../assets/data/assets.json';
 
 const applyUpdateResult = (result) => (prevState) => ({
   hits: [...prevState.hits, ...result.hits],
@@ -68,15 +68,17 @@ class Assets extends React.Component {
       ? this.setState(applySetResult(result))
       : this.setState(applyUpdateResult(result));
 
+
   render() {
+    const mapper = assetMapper((el) => console.log(el), (el) => console.log(el));
     return (
       <AdvancedTable
-        RowComponent={Asset}
-        list={this.state.hits}
+        data={mapper(this.state.hits)}
         isError={this.state.isError}
         isLoading={this.state.isLoading}
         page={this.state.page}
         onPaginatedSearch={this.onPaginatedSearch}
+        showHeader={false}
       />
     );
   }
