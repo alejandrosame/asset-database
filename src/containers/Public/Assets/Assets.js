@@ -73,7 +73,7 @@ class Assets extends React.Component {
     const mapper = assetMapper((el) => console.log(el), (el) => console.log(el));
     return (
       <AdvancedTable
-        data={mapper(this.state.hits)}
+        list={mapper(this.state.hits)}
         isError={this.state.isError}
         isLoading={this.state.isLoading}
         page={this.state.page}

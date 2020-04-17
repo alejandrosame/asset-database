@@ -31,15 +31,15 @@ const columns = [
   },
 ];
 
-const table = ({ data, isLoading, page, onPaginatedSearch, showHeader }) => {
+const table = ({ list, isLoading, page, onPaginatedSearch, showHeader }) => {
 
   let table = null;
-  if(data.length !== 0){
+  if(list.length !== 0){
     table = (
       <Table
         className={classes.Table}
         columns={columns}
-        data={data}
+        data={list}
         prefixCls='Table'
         showHeader={showHeader}
       />
