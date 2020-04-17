@@ -6,8 +6,6 @@ import classes from './Toolbar.module.css';
 import imgLogo from '../../../assets/logo-temp.png';
 
 const toolbar = (props) => {
-  console.log(props);
-
   let nav = null;
   if(props.isAuthenticated && props.match.path.includes("private")) {
     nav = (

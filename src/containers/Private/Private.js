@@ -4,7 +4,6 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import * as actions from '../../store/actions';
 
-import AddAssets from '../../components/AddAssets/AddAssets';
 import Assets from './Assets/Assets';
 import Layout from '../../containers/Layout/Layout';
 import Logout from '../../components/Auth/Logout/Logout';
@@ -29,9 +28,6 @@ class Private extends React.Component {
           />
           <Route path={`${this.props.match.path}/tags`} exact
             render={() => <Tags isAuthenticated={this.props.isAuthenticated}/>}
-          />
-         <Route path={`${this.props.match.path}/add-assets`} exact
-            render={() => <AddAssets isAuthenticated={this.props.isAuthenticated}/>}
           />
           <Route path={`${this.props.match.path}`} exact
             render={() => <Assets isAuthenticated={this.props.isAuthenticated}/>}

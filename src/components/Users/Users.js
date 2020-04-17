@@ -4,6 +4,7 @@ import React from 'react';
 
 import Button from '../UI/Button/Button';
 import Input from '../UI/Input/Input';
+import AddModalSection from '../UI/AddModalSection/AddModalSection';
 
 import { checkValidity, updateObject, createControls } from '../../shared/utility';
 import withAuth from '../../hoc/withAuth/withAuth';
@@ -128,12 +129,8 @@ class Users extends React.Component {
 
     return (
       <React.Fragment >
-        <Button
-          buttonType="Success"
-          clicked={this.handleOpenModal}
-        >
-          Invite user
-        </Button>
+
+        <AddModalSection text="InviteUser" clicked={this.handleOpenModal}/>
 
         <Table
           className={classes.Table}
