@@ -6,22 +6,23 @@ import Tag from '../../UI/Tag/Tag';
 import classes from './TagEditor.module.css';
 
 
-
 const tagEditor = ({ tags, label, onKeyPressAdd, onKeyPressSearch, onDelete }) =>
   <div className={classes.TagEditor}>
     <h2>{label}</h2>
-    <div className={classes.Editor}>
-      <div className={classes.ActionBar}>
-        <InputWithIcon
-          icon='add'
-          keyPressed={onKeyPressAdd}
-        />
+    <div className={classes.ActionBar}>
+      <InputWithIcon
+        icon='add'
+        keyPressed={onKeyPressAdd}
+        placeholder="Type to add tag"
+      />
 
-        <InputWithIcon
-          icon='search'
-          keyPressed={onKeyPressSearch}
-        />
-      </div>
+      <InputWithIcon
+        icon='search'
+        keyPressed={onKeyPressSearch}
+        placeholder="Type to filter tags"
+      />
+    </div>
+    <div className={classes.Editor}>
       {
         tags.map(tag => {
           return (
