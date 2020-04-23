@@ -1,7 +1,12 @@
 import React from 'react';
 import Modal from 'react-modal';
+import { MdClose } from 'react-icons/md';
+
+import classes from './Viz.module.css';
 
 const images = require.context('../../../../assets/art/', true);
+
+Modal.setAppElement("#root");
 
 class Viz extends React.Component {
   state = {
@@ -22,7 +27,7 @@ class Viz extends React.Component {
 
     return (
       <React.Fragment>
-        <div onClick={this.handleOpenModal}>
+        <div className={classes.Img} onClick={this.handleOpenModal}>
           <img
             src={images(this.props.thumbA)}
             alt={placeholderName + " Front"}
@@ -37,9 +42,18 @@ class Viz extends React.Component {
         <Modal
           isOpen={this.state.showModal}
           contentLabel={numberName}
+          style={{
+              content: {
+                top: "80px"
+              }
+          }}
         >
-          <button onClick={this.handleCloseModal}>Close</button>
-          <div style={{ height: "95%", textAlign: "center" }}>
+          <strong>{placeholderName}</strong><MdClose onClick={this.handleCloseModal}/>
+          <div style={{
+              height: "95%",
+              textAlign: "center"
+             }}
+          >
             <img
               style={{maxHeight: "100%"}}
               src={images(this.props.fullA)}
