@@ -97,7 +97,6 @@ class Assets extends React.Component {
   }
 
   render() {
-    console.log(`'${this.state.filter}'`);
     const mapper = assetMapper((el) => console.log(el), (el) => console.log(el));
     return (
       <React.Fragment>
