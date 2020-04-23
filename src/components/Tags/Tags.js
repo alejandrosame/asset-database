@@ -64,7 +64,7 @@ class Tags extends React.Component {
 
   onSetResult = (result) => this.setState(applySetResult(result));
 
-  onKeyPress = (event, actionFn) =>
+  onKeyUp = (event, actionFn) =>
     event.key === 'Enter'
       ? actionFn(event.target.value)
       : null
@@ -103,9 +103,9 @@ class Tags extends React.Component {
           <TagEditor
             label="Products"
             tags={this.filterTags("products")}
-            onKeyPressAdd={(event) => this.onKeyPress(event, this.onAddTag("products"))}
-            onKeyPressSearch={
-              (event) => this.onKeyPress(event, this.onAddFilter("products"))
+            onKeyUpAdd={(event) => this.onKeyUp(event, this.onAddTag("products"))}
+            onKeyUpSearch={
+              (event) => this.onKeyUp(event, this.onAddFilter("products"))
             }
             onDelete={(tagIdx) => this.onDeleteTag("products")(tagIdx)}
           />
@@ -114,9 +114,9 @@ class Tags extends React.Component {
           <TagEditor
             label="Tags"
             tags={this.filterTags("tags")}
-            onKeyPressAdd={(event) => this.onKeyPress(event, this.onAddTag("tags"))}
-            onKeyPressSearch={
-              (event) => this.onKeyPress(event, this.onAddFilter("tags"))
+            onKeyUpAdd={(event) => this.onKeyUp(event, this.onAddTag("tags"))}
+            onKeyUpSearch={
+              (event) => this.onKeyUp(event, this.onAddFilter("tags"))
             }
             onDelete={(tagIdx) => this.onDeleteTag("tags")(tagIdx)}
           />

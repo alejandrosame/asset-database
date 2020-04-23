@@ -4,7 +4,7 @@ import { MdAdd, MdSearch } from 'react-icons/md';
 
 import classes from './InputWithIcon.module.css';
 
-const addTag = ({ keyPressed, icon, placeholder }) => {
+const addTag = ({ keyUp, icon, placeholder }) => {
   let iconContent = null;
   switch (icon) {
     case 'add':
@@ -20,7 +20,7 @@ const addTag = ({ keyPressed, icon, placeholder }) => {
   return (
     <div className={classes.InputWithIcon}>
       {iconContent}
-      <input onKeyPress={keyPressed} placeholder={placeholder} />
+      <input onKeyUp={keyUp} placeholder={placeholder} />
     </div>
   );
 }

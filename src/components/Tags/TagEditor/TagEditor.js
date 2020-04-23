@@ -6,19 +6,19 @@ import Tag from '../../UI/Tag/Tag';
 import classes from './TagEditor.module.css';
 
 
-const tagEditor = ({ tags, label, onKeyPressAdd, onKeyPressSearch, onDelete }) =>
+const tagEditor = ({ tags, label, onKeyUpAdd, onKeyUpSearch, onDelete }) =>
   <div className={classes.TagEditor}>
     <h2>{label}</h2>
     <div className={classes.ActionBar}>
       <InputWithIcon
         icon='add'
-        keyPressed={onKeyPressAdd}
+        keyUp={onKeyUpAdd}
         placeholder="Type to add tag"
       />
 
       <InputWithIcon
         icon='search'
-        keyPressed={onKeyPressSearch}
+        keyUp={onKeyUpSearch}
         placeholder="Type to filter tags"
       />
     </div>
