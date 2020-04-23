@@ -1,0 +1,12 @@
+.Tag {
+  margin: 0.5px;
+}
+
+.Tag:hover {
+  cursor: pointer;
+  color: red;
+}
+
+.Tag:not(:last-child):after {
+  content: ", ";
+}
