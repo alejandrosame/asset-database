@@ -48,7 +48,10 @@ class Viz extends React.Component {
               }
           }}
         >
-          <strong>{placeholderName}</strong><MdClose onClick={this.handleCloseModal}/>
+          <div className={classes.TopBar}>
+            <strong className={classes.AssetName} >{placeholderName}</strong>
+            <MdClose className={classes.CloseModal} onClick={this.handleCloseModal} />
+          </div>
           <div style={{
               height: "95%",
               textAlign: "center"
