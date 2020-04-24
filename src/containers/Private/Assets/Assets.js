@@ -100,7 +100,7 @@ class Assets extends React.Component {
     const mapper = assetMapper((el) => console.log(el), (el) => console.log(el));
     return (
       <React.Fragment>
-        <AddModalSection clicked={() => console.log("clicked")} text="Add assets" />
+        <AddModalSection clicked={() => alert("Modal section not implemented yet")} text="Add assets" />
         <InputWithIcon
           icon='search'
           keyUp={(event) => this.onKeyUp(event, this.onAddFilter)}
