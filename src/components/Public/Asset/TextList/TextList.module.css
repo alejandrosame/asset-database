@@ -10,3 +10,7 @@
 .Tag:not(:last-child):after {
   content: ", ";
 }
+
+.TagFiltered {
+  color: red;
+}

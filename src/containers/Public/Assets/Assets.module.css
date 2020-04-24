@@ -1,0 +1,10 @@
+.Announcement {
+  display: flex;
+  align-items: left;
+  margin-left: 60px;
+  margin-right: 60px;
+}
+
+.AnnouncementText {
+  margin-top: 13px;
+}
