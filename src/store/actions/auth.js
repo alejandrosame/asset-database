@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import axios from '../../axios/auth';
+import Backend from '../../Backend/Backend';
 
 export const authStart = () => {
   return {
@@ -39,17 +39,11 @@ export const checkAuthTimeout = (expirationTime) => {
 }
 
 export const login = (email, password) => {
+  const backend = new Backend();
   return dispatch => {
     dispatch(authStart());
 
-    const authData = {
-      email: email,
-      password: password,
-      returnSecureToken: true
-    }
-
-    let url = '/accounts:signInWithPassword';
-    axios.post( url, authData )
+    backend.login(email, password)
       .then(response => {
         const expirationDate = new Date(new Date().getTime() + response.data.expiresIn * 1000);
         localStorage.setItem('token', response.data.idToken);

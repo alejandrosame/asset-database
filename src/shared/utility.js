@@ -117,3 +117,11 @@ export const createControls = (controls) => {
 
   return ctrls;
 }
+
+export const checkEnv = (requiredEnv) => {
+  let unsetEnv = requiredEnv.filter((env) => !(typeof process.env[env] !== 'undefined'));
+
+  if (unsetEnv.length > 0) {
+    throw new Error("Required ENV variables are not set: [" + unsetEnv.join(', ') + "]");
+  }
+}
