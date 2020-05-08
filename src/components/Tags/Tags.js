@@ -91,12 +91,15 @@ class Tags extends React.Component {
   }
 
   onDeleteTag = (collection) => (idx) => {
-    const newCollection = update(this.state[collection], { $splice: [[idx, 1]] });
+    const newCollection = update(
+      this.state[collection],
+      {$set: this.state[collection].filter(item => item.id !== idx)}
+    );
+
     this.setState( { [collection]: newCollection } );
   }
 
   onAddFilter = (collection) => (filterValue) =>
-
     this.setState( { [`${collection}Filter`]: filterValue } );
 
   filterTags = (collection) =>
