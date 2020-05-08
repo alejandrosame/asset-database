@@ -17,6 +17,16 @@ class PHPBackend {
     let url = '/api/auth/login.php';
     return this.instances["base"].post( url, authData );
   }
+
+  get_tags() {
+    let url = '/api/tag/read.php';
+    return this.instances["base"].post( url );
+  }
+
+  get_products() {
+    let url = '/api/product/read.php';
+    return this.instances["base"].post( url );
+  }
 }
 
 export default PHPBackend;

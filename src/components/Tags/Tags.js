@@ -1,13 +1,11 @@
 import update from 'immutability-helper';
 import React from 'react';
 
+import Backend from '../../Backend/Backend';
 import TagEditor from './TagEditor/TagEditor';
 import Spinner from '../UI/Spinner/Spinner';
 
 import withAuth from '../../hoc/withAuth/withAuth';
-
-import tagsData from '../../assets/data/tags.json';
-
 
 const applySetResult = (result) => (prevState) => ({
   tags: result.tags,
@@ -38,26 +36,37 @@ class Tags extends React.Component {
 
   fetchTags = () => {
     this.setState({ isLoading: true });
+    const backend = new Backend();
 
-    setTimeout(
-      () => {
-        const result = {
-          tags: tagsData['tags'].map((value, idx) => {
-            return {
-              id: idx,
-              value: value
-          }}),
-          products: tagsData['products'].map((value, idx) => {
-            return {
-              id: idx,
-              value: value
-          }})
-        };
+    let tagsData = [];
+    let productsData = [];
+    backend.get_tags()
+      .then(response => {
+        tagsData = response.data.tags;
 
-        this.onSetResult(result);
-      },
-      1500
-    )
+        backend.get_products()
+          .then(response => {
+            productsData = response.data.products;
+
+            const result = {
+              tags: tagsData.map(tag => {
+                return {
+                  id: tag.id,
+                  value: tag.name
+              }}),
+              products: productsData.map(product => {
+                return {
+                  id: product.id,
+                  value: product.name
+              }})
+            };
+
+            this.onSetResult(result);
+          })
+          .catch( error => this.onSetError() );
+
+      })
+      .catch( error => this.onSetError() );
   }
 
   onSetError = () => this.setState(applySetError);
