@@ -27,6 +27,24 @@ class PHPBackend {
     let url = '/api/product/read.php';
     return this.instances["base"].post( url );
   }
+
+  insert_tag(value) {
+    const data = {
+      "name": value
+    }
+
+    let url = '/api/tag/create.php';
+    return this.instances["base"].post( url, data );
+  }
+
+  insert_product(value) {
+    const data = {
+      "name": value
+    }
+
+    let url = '/api/product/create.php';
+    return this.instances["base"].post( url, data );
+  }
 }
 
 export default PHPBackend;

@@ -14,6 +14,12 @@ const applySetResult = (result) => (prevState) => ({
   isLoading: false,
 });
 
+const applySetCollection = (collection, newCollection) => (prevState) => ({
+  [collection]: newCollection,
+  isError: false,
+  isLoading: false,
+});
+
 const applySetError = (prevState) => ({
   isError: true,
   isLoading: false,
@@ -73,21 +79,36 @@ class Tags extends React.Component {
 
   onSetResult = (result) => this.setState(applySetResult(result));
 
+  onSetCollection = (collection, newCollection) =>
+    this.setState(applySetCollection(collection, newCollection));
+
   onKeyUp = (event, actionFn) =>
     event.key === 'Enter'
       ? actionFn(event.target.value)
       : null
 
-  onAddTag = (collection) => (tagValue) =>{
-    const lastItem = this.state[collection].slice(-1)[0];
-    const newCollection = update(this.state[collection], {
-      $push: [{
-        id: lastItem? lastItem.id + 1 : 0,
-        value: tagValue
-      }]}
-    );
+  onAddTag = (collection) => (tagValue) => {
+    this.setState({ isLoading: true });
+    const backend = new Backend();
 
-    this.setState( { [collection]: newCollection } );
+    let request;
+    if (collection === "tags") {
+      request = backend.insert_tag(tagValue);
+    } else {
+      request = backend.insert_product(tagValue);
+    }
+
+    request
+      .then( response => {
+        const newCollection = update(this.state[collection], {
+          $push: [{
+            id: response.id,
+            value: tagValue
+          }]}
+        );
+        this.onSetCollection(collection, newCollection);
+      })
+      .catch( error => this.onSetError() );
   }
 
   onDeleteTag = (collection) => (idx) => {
