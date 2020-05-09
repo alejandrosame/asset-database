@@ -111,13 +111,26 @@ class Tags extends React.Component {
       .catch( error => this.onSetError() );
   }
 
-  onDeleteTag = (collection) => (idx) => {
-    const newCollection = update(
-      this.state[collection],
-      {$set: this.state[collection].filter(item => item.id !== idx)}
-    );
+  onDeleteTag = (collection) => (id) => {
+    this.setState({ isLoading: true });
+    const backend = new Backend();
 
-    this.setState( { [collection]: newCollection } );
+    let request;
+    if (collection === "tags") {
+      request = backend.delete_tag(id);
+    } else {
+      request = backend.delete_product(id);
+    }
+
+    request
+      .then( response => {
+        const newCollection = update(
+          this.state[collection],
+          {$set: this.state[collection].filter(item => item.id !== id)}
+        );
+        this.onSetCollection(collection, newCollection);
+      })
+      .catch( error => this.onSetError() );
   }
 
   onAddFilter = (collection) => (filterValue) =>

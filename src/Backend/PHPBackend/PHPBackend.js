@@ -45,6 +45,24 @@ class PHPBackend {
     let url = '/api/product/create.php';
     return this.instances["base"].post( url, data );
   }
+
+  delete_tag(id) {
+    const data = {
+      "id": id
+    }
+
+    let url = '/api/tag/delete.php';
+    return this.instances["base"].post( url, data );
+  }
+
+  delete_product(id) {
+    const data = {
+      "id": id
+    }
+
+    let url = '/api/product/delete.php';
+    return this.instances["base"].post( url, data );
+  }
 }
 
 export default PHPBackend;
