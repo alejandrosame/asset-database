@@ -14,6 +14,7 @@ class Viz extends React.Component {
   }
 
   handleOpenModal = () => {
+    if (this.props.disabled) return;
     this.setState({ showModal: true });
   }
 

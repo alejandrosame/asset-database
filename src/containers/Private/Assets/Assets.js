@@ -1,13 +1,17 @@
 import React from 'react';
+import Modal from 'react-modal';
 
 import AdvancedTable from '../../../hoc/AdvancedTable/AdvancedTable';
 import AddModalSection from '../../../components/UI/AddModalSection/AddModalSection';
 import InputWithIcon from '../../../components/UI/InputWithIcon/InputWithIcon';
 
+import AssetEditor from '../AssetEditor/AssetEditor';
 import assetMapper from './Asset/AssetMapper';
 import withAuth from '../../../hoc/withAuth/withAuth';
 
 import assetsData from '../../../assets/data/assets.json';
+
+Modal.setAppElement("#root");
 
 const applyUpdateResult = (result) => (prevState) => ({
   hits: [...prevState.hits, ...result.hits],
@@ -23,14 +27,42 @@ const applySetResult = (result) => (prevState) => ({
   isLoading: false,
 });
 
+const applyEditorSetResult = (result) => (prevState) => ({
+  editorHits: result.hits,
+  isError: false,
+  isLoading: false,
+});
+
 const applySetError = (prevState) => ({
   isError: true,
   isLoading: false,
 });
 
+const onRowClick = (record, index) => {
+  console.log(`Click nth(${index}) row of parent, record.name: ${record.key}`);
+
+};
+
+const getEmptyAsset = () => {
+  return [{
+      "id": '',
+      "number": "",
+      "name": "",
+      "thumbA": "",
+      "thumbB": "",
+      "fullA": "",
+      "fullB": "",
+      "printSize": "",
+      "product": "",
+      "tags": [],
+      "notes": ""
+  }]
+}
+
 class Assets extends React.Component {
   state = {
     hits: [],
+    editorHits: [],
     page: null,
     filter: '',
     isError: false,
@@ -74,6 +106,9 @@ class Assets extends React.Component {
       ? this.setState(applySetResult(result))
       : this.setState(applyUpdateResult(result));
 
+  onSetEditorResult = (result) =>
+    this.setState(applyEditorSetResult(result))
+
   onAddFilter = (filterValue) =>
     this.setState( { filter: filterValue } );
 
@@ -96,11 +131,27 @@ class Assets extends React.Component {
     this.setState( { timeout: timeout } );
   }
 
+  handleOpenModal = () => {
+    this.setState({ showModal: true });
+  }
+
+  handleCloseModal = () => {
+    this.setState({ showModal: false });
+  }
+
   render() {
+    let assetEditor = (
+      <AssetEditor
+        data={getEmptyAsset()}
+        cancel={this.handleCloseModal}
+        save={this.handleCloseModal}
+      />
+    );
+
     const mapper = assetMapper((el) => console.log(el), (el) => console.log(el));
     return (
       <React.Fragment>
-        <AddModalSection clicked={() => alert("Modal section not implemented yet")} text="Add assets" />
+        <AddModalSection clicked={() => this.handleOpenModal()} text="Add assets" />
         <InputWithIcon
           icon='search'
           keyUp={(event) => this.onKeyUp(event, this.onAddFilter)}
@@ -108,12 +159,29 @@ class Assets extends React.Component {
         />
         <AdvancedTable
           list={mapper(this.filterAssets(this.state.hits))}
+          onRow={(record, index) => ({
+            onClick: onRowClick.bind(null, record, index)
+          })}
           isError={this.state.isError}
           isLoading={this.state.isLoading}
           page={this.state.page}
           onPaginatedSearch={this.onPaginatedSearch}
           showHeader={true}
         />
+
+        <Modal
+          isOpen={this.state.showModal}
+          contentLabel="Send user invitation"
+          style={{
+            content: {
+              height:"700px",
+              margin: "auto",
+              textAlign: "center",
+            }
+          }}
+        >
+          {assetEditor}
+        </Modal>
       </React.Fragment>
     );
   }

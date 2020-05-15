@@ -1,0 +1,22 @@
+.Table,
+.Table tr {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.Table {
+  width: 90%;
+  margin: auto;
+}
+
+.Table td {
+  padding: 10px;
+}
+
+.Table ~ table {
+  width: 100%;
+}
+
+.Table ~ .Table-tbody {
+  width: 100%;
+}

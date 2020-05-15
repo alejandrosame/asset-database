@@ -4,7 +4,7 @@ import classes from './TextList.module.css';
 
 const textList = ({list, clicked, filtered}) =>
   list.map(element =>{
-    let clsList = [];
+    let clsList = [classes.Base];
     if (clicked) clsList.push(classes.Tag);
     if (filtered && filtered.has(element)) clsList.push(classes.TagFiltered);
 

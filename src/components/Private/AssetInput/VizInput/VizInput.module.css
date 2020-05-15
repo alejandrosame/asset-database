@@ -1,0 +1,99 @@
+.VizInput {
+  width: 210px;
+  justify-content: center;
+}
+
+.SelectorGroup {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.Selector {
+  width: 50%;
+  justify-content: center;
+}
+
+.Group * { box-sizing:border-box; }
+
+/* form starting stylings ------------------------------- */
+.Group {
+  position:relative;
+  margin-top:25px;
+}
+
+.Group input {
+  font-size:14px;
+  padding:10px 10px 10px 5px;
+  display:block;
+  width:100%;
+  border:none;
+  border-bottom:1px solid #757575;
+}
+.Group input:focus { outline:none; }
+
+/* LABEL ======================================= */
+.Group label {
+  color:#999;
+  font-size:14px;
+  font-weight:normal;
+  position:absolute;
+  pointer-events:none;
+  left:5px;
+  top:10px;
+  transition:0.2s ease all;
+  -moz-transition:0.2s ease all;
+  -webkit-transition:0.2s ease all;
+}
+
+/* active state */
+.Group input:focus ~ label, input:valid ~ label {
+  top:-20px;
+  font-size:14px;
+  color:#5264AE;
+}
+
+/* BOTTOM BARS ================================= */
+.Bar 	{ position:relative; display:block; width:100%; }
+.Bar:before, .Bar:after 	{
+  content:'';
+  height:2px;
+  width:0;
+  bottom:1px;
+  position:absolute;
+  background:#5264AE;
+  transition:0.2s ease all;
+}
+.Bar:before {
+  left:50%;
+}
+.Bar:after {
+  right:50%;
+}
+
+/* active state */
+input:focus ~ .Bar:before, input:focus ~ .Bar:after {
+  width:50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.Highlight {
+  position:absolute;
+  height:60%;
+  width:100%;
+  top:25%;
+  left:0;
+  pointer-events:none;
+  opacity:0.5;
+}
+
+/* active state */
+input:focus ~ .Highlight {
+  animation:inputHighlighter 0.3s ease;
+}
+
+/* ANIMATIONS ================ */
+@keyframes inputHighlighter {
+	from { background:#5264AE; }
+  to 	{ width:0; background:transparent; }
+}
