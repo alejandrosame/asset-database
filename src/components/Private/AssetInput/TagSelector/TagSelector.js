@@ -1,6 +1,6 @@
 import React from 'react';
 
-import InputWithIcon from '../../../UI/InputWithIcon/InputWithIcon';
+//import InputWithIcon from '../../../UI/InputWithIcon/InputWithIcon';
 import Tag from '../../../UI/Tag/Tag';
 
 import classes from './TagSelector.module.css';
