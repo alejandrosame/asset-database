@@ -2,12 +2,12 @@ import React from 'react';
 
 import * as classes from './DropdownInput.module.css'
 
-const dropdownInput = ({ id, defaultValue, options }) => (
+const dropdownInput = ({ id, defaultValue, value, options }) => (
   <select
     className={classes.DropdownInput}
     id={id}
     defaultValue={defaultValue}
-    value={defaultValue}
+    value={value}
   >
     <option
       key=""
