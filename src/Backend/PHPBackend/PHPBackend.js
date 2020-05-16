@@ -28,6 +28,10 @@ class PHPBackend {
     return this.instances["base"].post( url );
   }
 
+  get_size_options() {
+    return ["Small", "Medium", "Huge"];
+  }
+
   insert_tag(value) {
     const data = {
       "name": value

@@ -29,7 +29,7 @@ class tagSelector extends React.Component {
 
   render() {
     const selectable = this.props.options.filter(
-      value => !this.state.values.includes(value)
+      tag => !this.state.values.includes(tag.value)
     )
 
     let message = "Select tags from the set below."
