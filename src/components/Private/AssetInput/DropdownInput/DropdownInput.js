@@ -3,11 +3,15 @@ import React from 'react';
 import * as classes from './DropdownInput.module.css'
 
 const dropdownInput = ({ id, defaultValue, options }) => (
-  <select className={classes.DropdownInput} id={id} >
+  <select
+    className={classes.DropdownInput}
+    id={id}
+    defaultValue={defaultValue}
+    value={defaultValue}
+  >
     <option
       key=""
       value=""
-      selected={!options.includes(defaultValue)}
       disabled
       hidden
     >
@@ -18,7 +22,6 @@ const dropdownInput = ({ id, defaultValue, options }) => (
         return <option
           key={value}
           value={value}
-          selected={value === defaultValue}
         >
           {value}
         </option>
