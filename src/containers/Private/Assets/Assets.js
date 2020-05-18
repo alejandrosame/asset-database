@@ -143,8 +143,8 @@ class Assets extends React.Component {
     let assetEditor = (
       <AssetEditor
         data={getEmptyAsset()}
-        cancel={this.handleCloseModal}
-        save={this.handleCloseModal}
+        cancelFn={this.handleCloseModal}
+        acceptFn={this.handleCloseModal}
       />
     );
 

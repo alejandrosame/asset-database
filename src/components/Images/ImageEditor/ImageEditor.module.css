@@ -1,0 +1,14 @@
+.ImageEditor {
+  width: 90%;
+  height: 80vh;;
+  margin: auto;
+  margin-top: 40px;
+  text-align: left;
+}
+
+.Editor {
+  height: 90%;
+  border: 1px solid black;
+  display: block;
+  overflow-y: auto;
+}

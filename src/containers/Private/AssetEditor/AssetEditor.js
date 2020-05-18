@@ -87,10 +87,15 @@ class AssetEditor extends React.Component {
             list={mapper(this.state.hits)}
             showHeader={true}
           />
-          <Button buttonType="Success">Save</Button>
+          <Button
+            buttonType="Success"
+            clicked={this.props.acceptFn}
+          >
+            Create
+          </Button>
           <Button
             buttonType="Danger"
-            clicked={this.handleCloseModal}
+            clicked={this.props.cancelFn}
           >
             Cancel
           </Button>

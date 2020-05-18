@@ -9,6 +9,7 @@ import Layout from '../../containers/Layout/Layout';
 import Logout from '../../components/Auth/Logout/Logout';
 import Tags from '../../components/Tags/Tags';
 import Users from '../../components/Users/Users';
+import Images from '../../components/Images/Images';
 
 
 class Private extends React.Component {
@@ -23,6 +24,9 @@ class Private extends React.Component {
       <Layout {...this.props}>
         <Switch>
           <Route path={`${this.props.match.path}/logout`} exact component={Logout} />
+          <Route path={`${this.props.match.path}/images`} exact
+            render={() => <Images isAuthenticated={this.props.isAuthenticated}/>}
+          />
           <Route path={`${this.props.match.path}/users`} exact
             render={() => <Users isAuthenticated={this.props.isAuthenticated}/>}
           />

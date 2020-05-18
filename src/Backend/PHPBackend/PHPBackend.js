@@ -20,12 +20,17 @@ class PHPBackend {
 
   get_tags() {
     let url = '/api/tag/read.php';
-    return this.instances["base"].post( url );
+    return this.instances["base"].get( url );
   }
 
   get_products() {
     let url = '/api/product/read.php';
-    return this.instances["base"].post( url );
+    return this.instances["base"].get( url );
+  }
+
+  get_images() {
+    let url = '/api/image/read.php';
+    return this.instances["base"].get( url );
   }
 
   get_size_options() {

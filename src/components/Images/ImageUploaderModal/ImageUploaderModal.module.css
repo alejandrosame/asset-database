@@ -1,0 +1,47 @@
+.ImageUploaderModal {
+  width: 90%;
+  height: 80vh;;
+  margin: auto;
+  margin-top: 40px;
+  text-align: left;
+}
+
+.Uploader {
+  height: 90%;
+  border: 1px solid black;
+  display: block;
+  overflow-y: auto;
+}
+
+.ImageContainer {
+  border: 1px solid #DDDDDD;
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+}
+
+.ImageContainer img {
+  max-height: 100px;
+  height: 100%;
+  width: auto;
+}
+
+.RemoveButton {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+}
+
+.RemoveButton:hover {
+  cursor: pointer;
+}
+
+.CloseModal {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+}
+
+.CloseModal:hover {
+  cursor: pointer;
+}
