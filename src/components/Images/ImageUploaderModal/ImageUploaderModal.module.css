@@ -6,34 +6,70 @@
   text-align: left;
 }
 
-.Uploader {
+.TableArea {
   height: 90%;
+  width: 95%;
+  margin: auto;
+  border: 1px solid #CCCCCC;
+  overflow-y: scroll;
+}
+
+.Table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.Table thead {
+  background: black;
+  color:#fff;
+}
+
+.Table td, .Table th {
   border: 1px solid black;
-  display: block;
-  overflow-y: auto;
+  text-align: left;
+  padding: 8px;
+}
+
+.Table th:first-child {
+  width: 30px;
+}
+
+.Table th:last-child {
+  width: 400px;
+}
+
+.Table tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+
+.Table tr td:first-child {
+  text-align: center;
 }
 
 .ImageContainer {
   border: 1px solid #DDDDDD;
   position: relative;
   display: inline-block;
-  padding: 10px;
+  padding: 15px;
+  white-space: nowrap;
+  height: 160px;
+  width: 200px;
 }
 
-.ImageContainer img {
-  max-height: 100px;
-  height: 100%;
-  width: auto;
+.Status {
+  font-weight: bold;
+  height: 30px;
+  line-height: 30px;
+  margin-bottom: 10px;
 }
 
-.RemoveButton {
-  position: absolute;
-  top: 5px;
-  right: 8px;
+.Uploading {
+  background: #FFFC99;
 }
 
-.RemoveButton:hover {
-  cursor: pointer;
+.Finished {
+  background: #B9F1AE;
 }
 
 .CloseModal {
