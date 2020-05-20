@@ -18,6 +18,10 @@ class PHPBackend {
     return this.instances["base"].post( url, authData );
   }
 
+  get_base_image_URL(){
+    return this.instances["base"].defaults.baseURL;
+  }
+
   get_tags() {
     let url = '/api/tag/read.php';
     return this.instances["base"].get( url );
@@ -85,6 +89,15 @@ class PHPBackend {
     }
 
     let url = '/api/product/delete.php';
+    return this.instances["base"].post( url, data );
+  }
+
+  delete_image(id) {
+    const data = {
+      "id": id
+    }
+
+    let url = '/api/image/delete.php';
     return this.instances["base"].post( url, data );
   }
 }

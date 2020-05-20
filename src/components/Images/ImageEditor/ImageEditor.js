@@ -5,8 +5,9 @@ import InputWithIcon from '../../UI/InputWithIcon/InputWithIcon';
 
 import classes from './ImageEditor.module.css';
 
+import { capitalize } from '../../../shared/utility';
 
-const imageEditor = ({ images, label, onKeyUpSearch, onDelete }) =>
+const imageEditor = ({ baseImageURL, images, label, onKeyUpSearch, onDelete }) =>
   <div className={classes.ImageEditor}>
     <h2>{label}</h2>
     <div className={classes.ActionBar}>
@@ -17,20 +18,37 @@ const imageEditor = ({ images, label, onKeyUpSearch, onDelete }) =>
       />
     </div>
     <div className={classes.Editor}>
-      {
-        images.map(image => {
-          return (
-            <div className={classes.Image} key={image.id}>
-              <img src={image.url} alt={[image.number, image.name].concat(" ")}/>
-              <span>{image.number}</span><span>{image.name}</span>
-              <Button click={() => onDelete(image.id)}>Delete</Button>
-            </div>
-          );
-        })
-        .reduce( (arr, el) => {
-          return arr.concat(el);
-        }, [] )
-      }
+      <table className={classes.Table}>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Number</th>
+            <th className={classes.ImageColumn}>Image</th>
+            <th>Side</th>
+            <th>Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          {images.map(image => (
+            <tr key={image.id}>
+              <td>
+                <Button
+                  buttonType="Danger"
+                  clicked={() => onDelete(image.id)}
+                  >
+                  Delete
+                </Button>
+              </td>
+              <td>{image.number}</td>
+              <td>
+                <img src={baseImageURL+ image.thumbURL} alt={[image.number, image.name].concat(" ")}/>
+              </td>
+              <td>{capitalize(image.side)}</td>
+              <td>{image.name}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   </div>
 

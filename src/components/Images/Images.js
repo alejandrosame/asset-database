@@ -27,13 +27,21 @@ const applySetError = (prevState) => ({
 });
 
 class Images extends React.Component {
-  state = {
-    images: [],
-    filter: '',
-    page: null,
-    isError: false,
-    isLoading: false,
-  };
+
+  constructor(props) {
+    super(props);
+
+    const b = new Backend();
+
+    this.state = {
+      images: [],
+      filter: '',
+      baseImageURL: b.get_base_image_URL(),
+      page: null,
+      isError: false,
+      isLoading: false,
+    };
+  }
 
   componentDidMount() {
     this.fetch();
@@ -65,30 +73,6 @@ class Images extends React.Component {
     event.key === 'Enter'
       ? actionFn(event.target.value)
       : null
-
-  onAdd = (collection) => (tagValue) => {
-    this.setState({ isLoading: true });
-    const backend = new Backend();
-
-    let request;
-    if (collection === "tags") {
-      request = backend.insert_tag(tagValue);
-    } else {
-      request = backend.insert_product(tagValue);
-    }
-
-    request
-      .then( response => {
-        const newCollection = update(this.state[collection], {
-          $push: [{
-            id: response.id,
-            value: tagValue
-          }]}
-        );
-        this.onSetCollection(collection, newCollection);
-      })
-      .catch( error => this.onSetError() );
-  }
 
   onDelete = (collection) => (id) => {
     this.setState({ isLoading: true });
@@ -128,6 +112,7 @@ class Images extends React.Component {
 
   handleCloseModal = () => {
     this.setState({ showModal: false });
+    this.fetch();
   }
 
   render() {
@@ -141,6 +126,7 @@ class Images extends React.Component {
         <div>
           <ImageEditor
             label="Uploaded images"
+            baseImageURL={this.state.baseImageURL}
             images={this.applyFilter()}
             onKeyUpSearch={
               (event) => this.onKeyUp(event, this.onAddFilter())

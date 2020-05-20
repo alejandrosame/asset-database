@@ -12,3 +12,37 @@
   display: block;
   overflow-y: auto;
 }
+
+
+.Table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.Table thead {
+  background: black;
+  color:#fff;
+}
+
+.Table td, .Table th {
+  border: 1px solid black;
+  text-align: left;
+  padding: 8px;
+}
+
+.Table th:first-child {
+  width: 30px;
+}
+
+.ImageColumn {
+  width: 120px;
+}
+
+.Table tbody tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.Table th, .Table td, .Table img {
+  text-align: center;
+  margin:auto;
+}

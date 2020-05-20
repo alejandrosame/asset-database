@@ -125,3 +125,7 @@ export const checkEnv = (requiredEnv) => {
     throw new Error("Required ENV variables are not set: [" + unsetEnv.join(', ') + "]");
   }
 }
+
+export const capitalize = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
