@@ -17,30 +17,58 @@ const STATUS_FIELD = "status";
 const ERRORMSG_FIELD = "errorMsg";
 const FILE_FIELD = "obj";
 
-const maxMbFileSize = 1;
+const maxMbFileSize = 10;
 const fileSelectorId = 'file-selector';
 
 
-/*
-{imageList.map((image) => {
-  const filename_splitted = image.file.name.split(" ");
-  const name_splitted = filename_splitted[1].split("_");
-  const number = filename_splitted[0]
-  const name = name_splitted.slice(0,-1).join(" ");
-  const side = name_splitted.slice(-1)[0].split(".")[0];
-  return (
-    <div className={classes.ImageContainer} key={image.key}>
-      <img src={image.dataURL} alt={image.key} />
-      <div>{number}</div>
-      <div>{name}</div>
-      <div>{capitalize(processSide(side))}</div>
-      <div className={classes.RemoveButton} onClick={image.onRemove} >
-        x
-      </div>
-    </div>
-  )
-})}
- */
+const processFilename = (str) => {
+  const validateNumber = (number) => {
+    return /^\d+$/.test(number);
+  }
+  const processSide = (side) => {
+    switch(side.toLowerCase()) {
+      case "a":
+      case "front": {
+        return "front";
+      }
+      case "b":
+      case "back":{
+        return "back";
+      }
+      default: {
+        return null;
+      }
+    }
+  }
+
+  const out = {};
+
+  try {
+    const noExtension = str.split(".")[0];
+    const [number, noNumber] = noExtension.split(" ");
+    const nameWithSide = noNumber.split("_");
+    const side = nameWithSide.pop();
+    const name = nameWithSide.join(" ");
+
+    if (!validateNumber(number)) {
+      out["errorMsg"] = "Could not extract number from filename.";
+      return out;
+    }
+    out["side"] =  processSide(side);
+    if (!out["side"]) {
+      out["errorMsg"] = "Could not extract side from filename.";
+      return out;
+    }
+
+    out["number"] = number;
+    out["name"] = name;
+
+  } catch(error) {
+    out["errorMsg"] = "Could not extract number and side from filename.";
+  }
+
+  return out;
+}
 
 const mapStatusIcon = (status) => {
   switch(status) {
@@ -128,7 +156,6 @@ class ImageUploaderModal extends React.Component {
   }
 
   onChange = e => {
-    const errs = []
     const files = Array.from(e.target.files).map(file => new Map([
       [FILE_FIELD, file]
     ]));
@@ -149,58 +176,53 @@ class ImageUploaderModal extends React.Component {
 
   onAdvanceUploadIndex = (fieldsPrevious) => {
     const { index, files, uploading } = { ...this.state };
-    let newIndex = index;
     let newUploading = uploading;
 
     files[index] = applyFields(files[index], fieldsPrevious);
 
     if (index < files.length-1){
-      newIndex = index+1;
-      files[newIndex] = applyFields(files[newIndex], getUploadingFields());
+      files[index+1] = applyFields(files[index+1], getUploadingFields());
     } else {
       newUploading = false;
     }
 
     this.setState({
       files: files,
-      index: newIndex,
+      index: index+1,
       uploading: newUploading
     });
   }
 
   onUpload = (file) => new Promise((resolve, reject) => {
-    const formData = new FormData()
     const types = ['image/png']
 
     if (types.every(type => file.type !== type)) {
-      const msg = "Wrong file type. It must be PNG.";
+      const msg = "Cannot upload: File is not PNG.";
       reject(new Error(msg));
+      return;
     }
 
     if (file.size > maxMbFileSize * 1024 * 1024) {
-      const msg = `File is bigger than ${maxMbFileSize} Mb`;
+      const msg = `Cannot upload: File is bigger than ${maxMbFileSize} Mb.`;
       reject(new Error(msg));
+      return;
     }
 
-    resolve('Hello, Promises!');
-
-    /*
-    formData.append(index, file)
-
+    const { number, name, side, errorMsg } = processFilename(file.name);
+    if (errorMsg) {
+      reject(new Error(errorMsg));
+      return;
+    }
 
     const backend = new Backend();
-    backend.upload_image(formData)
+    backend.upload_image(file, number, name, side)
     .then(response => {
-      this.setState({
-        uploading: false
-      })
+      resolve();
     })
-    .catch(err => {
-      err.json().then(e => {
-        this.setState({ uploading: false })
-      })
+    .catch(error => {
+      const msg = `Server error ${error.response.status}: ${error.response.data.message}`;
+      reject(new Error(msg));
     })
-    */
   });
 
   onClickSelectFiles = () => {

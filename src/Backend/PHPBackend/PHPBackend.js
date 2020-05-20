@@ -55,6 +55,21 @@ class PHPBackend {
     return this.instances["base"].post( url, data );
   }
 
+  upload_image(file, number, name, side) {
+    const url = '/api/image/upload.php';
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('number', number);
+    formData.append('name', name);
+    formData.append('side', side);
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data'
+      }
+    }
+    return this.instances["base"].post( url, formData, config );
+  }
+
   delete_tag(id) {
     const data = {
       "id": id
