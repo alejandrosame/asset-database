@@ -40,11 +40,16 @@ class Images extends React.Component {
       page: null,
       isError: false,
       isLoading: false,
+      timeout: null
     };
   }
 
   componentDidMount() {
     this.fetch();
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.state.timeout);
   }
 
   fetch = () => {
@@ -69,10 +74,14 @@ class Images extends React.Component {
   onSetCollection = (collection, newCollection) =>
     this.setState(applySetCollection(collection, newCollection));
 
-  onKeyUp = (event, actionFn) =>
-    event.key === 'Enter'
-      ? actionFn(event.target.value)
-      : null
+  onKeyUp = (event, actionFn) => {
+    clearTimeout(this.state.timeout);
+
+    const e = {...event};
+    const timeout = setTimeout(() => actionFn(e.target.value), 500);
+
+    this.setState( { timeout: timeout } );
+  }
 
   onDelete = (collection) => (id) => {
     this.setState({ isLoading: true });
