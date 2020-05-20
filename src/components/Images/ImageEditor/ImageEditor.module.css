@@ -38,6 +38,14 @@
   width: 120px;
 }
 
+.NumberColumn {
+  width: 70px;
+}
+
+.SideColumn {
+  width: 50px;
+}
+
 .Table tbody tr:nth-child(even) {
   background-color: #dddddd;
 }

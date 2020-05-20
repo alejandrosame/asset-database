@@ -22,9 +22,9 @@ const imageEditor = ({ baseImageURL, images, label, onKeyUpSearch, onDelete }) =
         <thead>
           <tr>
             <th></th>
-            <th>Number</th>
+            <th className={classes.NumberColumn}>Number</th>
             <th className={classes.ImageColumn}>Image</th>
-            <th>Side</th>
+            <th className={classes.SideColumn}>Side</th>
             <th>Name</th>
           </tr>
         </thead>
