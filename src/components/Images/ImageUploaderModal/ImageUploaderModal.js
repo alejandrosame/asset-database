@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { MdClear } from 'react-icons/md';
+import { MdBackup, MdClear, MdDone, MdErrorOutline } from 'react-icons/md';
 
 import update from 'immutability-helper';
 
@@ -17,7 +17,7 @@ const STATUS_FIELD = "status";
 const ERRORMSG_FIELD = "errorMsg";
 const FILE_FIELD = "obj";
 
-const maxMbFileSize = 10;
+const maxMbFileSize = 1;
 const fileSelectorId = 'file-selector';
 
 
@@ -45,13 +45,13 @@ const fileSelectorId = 'file-selector';
 const mapStatusIcon = (status) => {
   switch(status) {
     case (UPLOADING): {
-      return "->";
+      return <MdBackup />;
     }
     case (SUCCESS): {
-      return "v";
+      return <MdDone />;
     }
     case (ERROR): {
-      return "x";
+      return <MdErrorOutline />;
     }
     default: {
       return "--";
@@ -94,17 +94,28 @@ const getErrorFields = (msg) => [
   [ERRORMSG_FIELD, msg]
 ];
 
+const applyFields = (file, fields) => update( file, {$add: fields} );
+
 const resetState = { uploading: false, files: [], index: 0 };
 
 class ImageUploaderModal extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {...resetState};
   }
 
-  applyStatus = (id, status) => {
+  componentDidUpdate(prevProps, prevState) {
+    const { prevUploading, prevIndex } = prevState;
+    const { uploading, index, files } = this.state;
 
+    if ( prevUploading !== uploading || prevIndex !== index ){
+      if (uploading) {
+        const file = new Map(files[index]);
+        this.onUpload(file.get(FILE_FIELD))
+          .then(response => this.onAdvanceUploadIndex(getSuccessFields()))
+          .catch(error => this.onAdvanceUploadIndex(getErrorFields(error.message)));
+      }
+    }
   }
 
   onReset = () => {
@@ -122,19 +133,13 @@ class ImageUploaderModal extends React.Component {
       [FILE_FIELD, file]
     ]));
 
-    console.log(files);
     this.setState({ files: files, index: 0 });
   }
 
   onInitUpload = () => {
     const { index, files } = { ...this.state };
 
-    const fileStatusAdded = update(
-      files[index],
-      {$add: getUploadingFields() }
-    );
-
-    files[index] = fileStatusAdded;
+    files[index] = applyFields(files[index], getUploadingFields());
 
     this.setState({
       files: files,
@@ -142,36 +147,46 @@ class ImageUploaderModal extends React.Component {
      });
   }
 
-  onAdvanceUploadIndex = () => {
-    const { index } = { ...this.state };
+  onAdvanceUploadIndex = (fieldsPrevious) => {
+    const { index, files, uploading } = { ...this.state };
+    let newIndex = index;
+    let newUploading = uploading;
 
-    this.setState({ index: index+1 });
+    files[index] = applyFields(files[index], fieldsPrevious);
+
+    if (index < files.length-1){
+      newIndex = index+1;
+      files[newIndex] = applyFields(files[newIndex], getUploadingFields());
+    } else {
+      newUploading = false;
+    }
+
+    this.setState({
+      files: files,
+      index: newIndex,
+      uploading: newUploading
+    });
   }
 
-  onUpload = () => {
-    this.onInitUpload();
-    return;
-    const { files } = this.state;
-
+  onUpload = (file) => new Promise((resolve, reject) => {
     const formData = new FormData()
     const types = ['image/png']
 
-    files.forEach((file, i) => {
+    if (types.every(type => file.type !== type)) {
+      const msg = "Wrong file type. It must be PNG.";
+      reject(new Error(msg));
+    }
 
-      if (types.every(type => file.type !== type)) {
-        //errs.push(`'${file.type}' is not a supported format`)
-        return;
-      }
+    if (file.size > maxMbFileSize * 1024 * 1024) {
+      const msg = `File is bigger than ${maxMbFileSize} Mb`;
+      reject(new Error(msg));
+    }
 
-      if (file.size > maxMbFileSize * 1024 * 1024) {
-        //errs.push(`'${file.name}' is larger than ${maxMbFileSize}MB, please pick a smaller file`)
-        return;
-      }
+    resolve('Hello, Promises!');
 
-      formData.append(i, file)
-    })
+    /*
+    formData.append(index, file)
 
-    this.setState({ uploading: true })
 
     const backend = new Backend();
     backend.upload_image(formData)
@@ -185,7 +200,8 @@ class ImageUploaderModal extends React.Component {
         this.setState({ uploading: false })
       })
     })
-  }
+    */
+  });
 
   onClickSelectFiles = () => {
     document.getElementById(fileSelectorId).click();
@@ -195,7 +211,7 @@ class ImageUploaderModal extends React.Component {
     const { isOpen, closeFn } = this.props;
     const { uploading, files, index } = this.state;
     const allowSelect = !uploading;
-    const allowUpload = !uploading && files.length !== 0;
+    const allowUpload = !uploading && files.length !== 0 && index === 0;
 
     let table = <p>No files selected.</p>;
     if (files.length > 0){
@@ -204,13 +220,14 @@ class ImageUploaderModal extends React.Component {
 
     let uploadStatus = null;
     if (uploading) {
-      const uploadingText = ["Uploading ", index+1, " / ", files.length].join("");
+      const uploadStatusText = ["Processing ", index+1, " / ", files.length].join("");
       uploadStatus = <div className={[classes.Status, classes.Uploading].join(" ")}>
-        {uploadingText}
+        {uploadStatusText}
       </div>
     } else if (index !== 0) {
-      uploadStatus = <div className={[classes.Status, classes.Uploading].join(" ")}>
-        Finished uploading!
+      const uploadStatusText = ["Processed ", files.length, " images!"].join("");
+      uploadStatus = <div className={[classes.Status, classes.Finished].join(" ")}>
+        {uploadStatusText}
       </div>
     }
 
@@ -249,7 +266,7 @@ class ImageUploaderModal extends React.Component {
         </Button>
         <Button
           buttonType="Success"
-          clicked={() => this.onUpload()}
+          clicked={() => this.onInitUpload()}
           disabled={!allowUpload}
         >
           Start upload
