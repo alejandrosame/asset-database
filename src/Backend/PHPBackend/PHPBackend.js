@@ -18,6 +18,17 @@ class PHPBackend {
     return this.instances["base"].post( url, authData );
   }
 
+  renew(token) {
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }
+
+    let url = '/api/auth/renewToken.php';
+    return this.instances["base"].get( url, config );
+  }
+
   get_base_image_URL(){
     return this.instances["base"].defaults.baseURL;
   }
