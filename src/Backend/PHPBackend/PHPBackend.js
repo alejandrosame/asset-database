@@ -3,9 +3,27 @@ import axios from 'axios';
 class PHPBackend {
   constructor(){
     this.instances = {};
-    this.instances["base"] = axios.create({
+    this.instances["public"] = axios.create({
       baseURL: process.env.REACT_APP_PHP_BACKEND_BASE_URL
     });
+    this.instances["private"] = axios.create({
+      baseURL: process.env.REACT_APP_PHP_BACKEND_BASE_URL
+    });
+
+    this.instances["private"].interceptors.request.use(
+      config => {
+        if (!config.headers.Authorization) {
+          const token = localStorage.getItem('token');
+
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
+        }
+
+        return config;
+      },
+      error => Promise.reject(error)
+    );
   }
 
   login(email, password) {
@@ -15,37 +33,31 @@ class PHPBackend {
     }
 
     let url = '/api/auth/login.php';
-    return this.instances["base"].post( url, authData );
+    return this.instances["public"].post( url, authData );
   }
 
-  renew(token) {
-    const config = {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    }
-
+  renew() {
     let url = '/api/auth/renewToken.php';
-    return this.instances["base"].get( url, config );
+    return this.instances["private"].get( url );
   }
 
   get_base_image_URL(){
-    return this.instances["base"].defaults.baseURL;
+    return this.instances["public"].defaults.baseURL;
   }
 
   get_tags() {
     let url = '/api/tag/read.php';
-    return this.instances["base"].get( url );
+    return this.instances["private"].get( url );
   }
 
   get_products() {
     let url = '/api/product/read.php';
-    return this.instances["base"].get( url );
+    return this.instances["private"].get( url );
   }
 
   get_images() {
     let url = '/api/image/read.php';
-    return this.instances["base"].get( url );
+    return this.instances["private"].get( url );
   }
 
   get_size_options() {
@@ -58,7 +70,7 @@ class PHPBackend {
     }
 
     let url = '/api/tag/create.php';
-    return this.instances["base"].post( url, data );
+    return this.instances["private"].post( url, data );
   }
 
   insert_product(value) {
@@ -67,7 +79,7 @@ class PHPBackend {
     }
 
     let url = '/api/product/create.php';
-    return this.instances["base"].post( url, data );
+    return this.instances["private"].post( url, data );
   }
 
   upload_image(file, number, name, side) {
@@ -82,7 +94,7 @@ class PHPBackend {
         'content-type': 'multipart/form-data'
       }
     }
-    return this.instances["base"].post( url, formData, config );
+    return this.instances["private"].post( url, formData, config );
   }
 
   delete_tag(id) {
@@ -91,7 +103,7 @@ class PHPBackend {
     }
 
     let url = '/api/tag/delete.php';
-    return this.instances["base"].post( url, data );
+    return this.instances["private"].post( url, data );
   }
 
   delete_product(id) {
@@ -100,7 +112,7 @@ class PHPBackend {
     }
 
     let url = '/api/product/delete.php';
-    return this.instances["base"].post( url, data );
+    return this.instances["private"].post( url, data );
   }
 
   delete_image(id) {
@@ -109,7 +121,7 @@ class PHPBackend {
     }
 
     let url = '/api/image/delete.php';
-    return this.instances["base"].post( url, data );
+    return this.instances["private"].post( url, data );
   }
 }
 

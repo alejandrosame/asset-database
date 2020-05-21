@@ -72,8 +72,7 @@ const renewToken = () => {
   const backend = new Backend();
   return dispatch => {
     if (!shouldRenew()) return;
-    const token = localStorage.getItem('token');
-    backend.renew(token)
+    backend.renew()
       .then(response => {
         processAuthResponse(response);
         const { token, id, expiresIn } = response.data;
