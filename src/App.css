@@ -1,4 +1,10 @@
+#root, .App {
+  height: 100%;
+}
+
 .App {
+  display: flex;
+  flex-direction: column;
   text-align: center;
 }
 
