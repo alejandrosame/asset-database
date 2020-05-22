@@ -1,0 +1,38 @@
+.Table {
+  width: 90%;
+  height: calc(50% - 15px);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.Title {
+  text-align: left;
+}
+
+.InnerRegion {
+  height: 100%;
+  flex-grow: 1;
+  overflow-y: auto;
+  background-color: #eeefff;
+}
+
+.Table table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.Table thead {
+  background: black;
+  color:#fff;
+}
+
+.Table td, .Table th {
+  border: 1px solid black;
+  text-align: left;
+  padding: 8px;
+}
+
+.Table tbody tr:nth-child(odd) {
+  background-color: white;
+}

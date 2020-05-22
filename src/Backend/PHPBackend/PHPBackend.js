@@ -60,6 +60,11 @@ class PHPBackend {
     return this.instances["private"].get( url );
   }
 
+  get_users() {
+    let url = '/api/user/read.php';
+    return this.instances["private"].get( url );
+  }
+
   get_size_options() {
     return ["Small", "Medium", "Huge"];
   }

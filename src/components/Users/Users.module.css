@@ -1,34 +1,17 @@
-.Table {
-  max-width: 90%;
-  margin: auto;
+.Page {
+  height: 100%;  
+  display: flex;
+  flex-flow: column;
 }
 
-.Table table {
+.Actions {
   width: 100%;
 }
 
-.Table-title {
-  text-align: left;
+.Content {
+  flex-grow: 1;
 }
 
-.Table table,
-.Table th,
-.Table tr,
-.Table td  {
-  border: 1px solid black;
-  border-collapse: collapse;
-}
-
-.Table th {
-  background-color: #DDD;
-  font: bold;
-}
-
-.Table th,
-.Table td {
-  padding: 10px;
-}
-
-.Table td:last-child {
-  width: 350px;
+.Table th:first-child {
+  width: 315px;
 }

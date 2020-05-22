@@ -1,179 +1,86 @@
-import Table from 'rc-table';
-import Modal from 'react-modal';
 import React from 'react';
 
-import Button from '../UI/Button/Button';
-import Input from '../UI/Input/Input';
-import AddModalSection from '../UI/AddModalSection/AddModalSection';
+import Backend from '../../Backend/Backend';
 
-import { checkValidity, updateObject, createControls } from '../../shared/utility';
+import Button from '../UI/Button/Button';
+import Table from '../UI/Table/Table';
+
+import CreateUserModal from './CreateUserModal/CreateUserModal';
 import withAuth from '../../hoc/withAuth/withAuth';
 
 import classes from './Users.module.css';
+import genericPrivateTableClasses from '../UI/Table/styles/genericPrivate.module.css';
 
 
 class Users extends React.Component {
-
   constructor(props){
     super(props);
 
     this.state = {};
-    this.state = updateObject(this.state, {
-      controls: createControls([
-        'email',
-        {type: 'checkbox', name: 'isAdmin', label:'User has admin privileges'}
-      ])
-    });
-    this.state = updateObject(this.state, {
-      showModal: false
-    });
+    this.state['users'] = [];
+
+    this.fetchData();
   }
 
-  state = {
-    showModal: false
+  fetchData(){
+    const backend = new Backend();
+    backend.get_users()
+      .then(response => this.setState({users: response.data.users}))
+      .catch(error => console.log("Could not fetch user data: " + error))
   }
 
-  inputChangedHandler = (event, controlName) => {
-    const updatedControls = updateObject(this.state.controls, {
-      [controlName]: updateObject(this.state.controls[controlName], {
-        value: event.target.value,
-        valid: checkValidity(
-          event.target.value,
-          this.state.controls[controlName].validation
-        ),
-        touched: true
-      })
-    });
-
-    this.setState({controls: updatedControls});
-  }
-
-  handleOpenModal = () => {
-    this.setState({ showModal: true });
-  }
-
-  handleCloseModal = () => {
-    this.setState({ showModal: false });
-  }
-
-  render() {
-    const formElementsArray = [];
-    for (let key in this.state.controls) {
-      formElementsArray.push({
-        id: key,
-        config: this.state.controls[key]
-      });
-    }
-    let form = formElementsArray.map(formElement => (
-      <Input
-        key={formElement.id}
-        elementType={formElement.config.elementType}
-        elementConfig={formElement.config.elementConfig}
-        value={formElement.config.value}
-        invalid={!formElement.config.valid}
-        shouldValidate={formElement.config.validation}
-        touched={formElement.config.touched}
-        changed={(event) => this.inputChangedHandler(event, formElement.id)}
-      />
-      )
-    );
-
-    const columns = [
-      {
-        title: 'Email',
-        dataIndex: 'email',
-        key: 'email'
-      },
-      {
-        title: 'Actions',
-        dataIndex: 'actions',
-        key: 'actions'
-      }
-    ];
-
-    const adminActions = (
-      <React.Fragment>
-        <Button buttonType="Danger">Revoke admin rights</Button>
-        <Button buttonType="Danger">Delete account</Button>
-      </React.Fragment>
-    );
-
-    const userActions = (
+  rowRenderer = (admin) => {
+    let actions = (
       <React.Fragment>
         <Button buttonType="Danger">Grant admin rights</Button>
         <Button buttonType="Danger">Delete account</Button>
       </React.Fragment>
     );
 
-    const adminData = [
-      { email: 'Jack@test.com',
-        actions: adminActions,
-        key: '1'
-      },
-      { email: 'Rose@test.com',
-        actions: adminActions,
-        key: '2'
-      }
-    ];
+    if (admin) {
+      actions = (
+        <React.Fragment>
+          <Button buttonType="Danger">Revoke admin rights</Button>
+          <Button buttonType="Danger">Delete account</Button>
+        </React.Fragment>
+      );
+    }
 
-    const userData = [
-      { email: 'Claire@test.com',
-        actions: userActions,
-        key: '1'
-      },
-      { email: 'Anthony@test.com',
-        actions: userActions,
-        key: '2'
-      }
-    ];
+    return {
+      getId: (row) => row.id,
+      renderColumns: (row) => [actions, row.username]
+    }
+  }
+
+  render() {
+    const columnTitles = ['', 'Username'];
+    const adminData = this.state.users.filter(user => user.admin);
+    const userData = this.state.users.filter(user => !user.admin);
 
     return (
-      <React.Fragment >
-
-        <AddModalSection text="InviteUser" clicked={this.handleOpenModal}/>
-
-        <Table
-          className={classes.Table}
-          title={() => <h2 className={classes['Table-title']}>Admins</h2>}
-          columns={columns}
-          data={adminData}
-          prefixCls='Table'
-        />
-
-        <Table
-          className={classes.Table}
-          title={() => <h2 className={classes['Table-title']}>Other database users</h2>}
-          columns={columns}
-          data={userData}
-          prefixCls='Table'
-        />
-
-        <Modal
-          isOpen={this.state.showModal}
-          contentLabel="Send user invitation"
-          style={{
-            content: {
-              width:"400px",
-              height:"250px",
-              margin: "auto",
-              textAlign: "center",
-            }
-          }}
-        >
-          <div>
-            <h2>Send user invitation</h2>
-            {form}
-            <Button buttonType="Success">Send invite</Button>
-              <Button
-                buttonType="Danger"
-                clicked={this.handleCloseModal}
-              >
-                Cancel
-              </Button>
-          </div>
-        </Modal>
-
-      </React.Fragment>
+      <div className={classes.Page}>
+        <div className={classes.Actions}>
+          <CreateUserModal />
+        </div>
+        <div className={classes.Content}>
+          <Table
+            classModules={[classes, genericPrivateTableClasses]}
+            title={"Admins"}
+            columnTitles={columnTitles}
+            showHeader={true}
+            rowRenderer={this.rowRenderer(true)}
+            data={adminData}
+            />
+          <Table
+            classModules={[classes, genericPrivateTableClasses]}
+            title={"Users"}
+            columnTitles={columnTitles}
+            showHeader={true}
+            rowRenderer={this.rowRenderer()}
+            data={userData}
+            />
+        </div>
+      </div>
     );
   }
 }
