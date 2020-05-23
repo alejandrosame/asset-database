@@ -34,6 +34,7 @@ export const logout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('expirationDate');
   localStorage.removeItem('userId');
+  clearTimeouts();
   return {
     type: actionTypes.AUTH_LOGOUT
   }
@@ -116,9 +117,7 @@ const handleLogout = (secondsToExpire) => {
   const renewBefore = 5; // 5 minutes before autologout
   const secondsToRenew = secondsToExpire - renewBefore * 60;
   return dispatch => {
-    // Delete previous timeouts
-    clearTimeout(localStorage.getItem("logoutTimeout"));
-    clearTimeout(localStorage.getItem("renewTimeout"));
+    clearTimeouts();
 
     localStorage.setItem('renewTimeout',
       setTimeout(
@@ -134,4 +133,9 @@ const handleLogout = (secondsToExpire) => {
       )
     );
   }
+}
+
+const clearTimeouts = () => {
+  clearTimeout(localStorage.getItem("logoutTimeout"));
+  clearTimeout(localStorage.getItem("renewTimeout"));
 }
