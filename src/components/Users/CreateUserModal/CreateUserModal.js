@@ -11,21 +11,18 @@ class CreateUserModal extends React.Component {
   constructor(props){
     super(props);
 
-    this.state = {};
-    this.state = updateObject(this.state, {
+    this.state = this.resetState();
+  }
+
+  resetState() {
+    return {
       controls: createControls([
         {id: 'username', type: 'text', placeholder: 'Username'},
         {id: 'password', type: 'password'},
         {id: 'checkbox', type: 'checkbox', name: 'isAdmin', label:'User has admin privileges'}
-      ])
-    });
-    this.state = updateObject(this.state, {
+      ]),
       showModal: false
-    });
-  }
-
-  state = {
-    showModal: false
+    };
   }
 
   inputChangedHandler = (event, id) => {
@@ -47,7 +44,7 @@ class CreateUserModal extends React.Component {
   }
 
   handleCloseModal = () => {
-    this.setState({ showModal: false });
+    this.setState(this.resetState());
   }
 
   mapControlToInput = (id) => {
@@ -66,6 +63,11 @@ class CreateUserModal extends React.Component {
   }
 
   render() {
+    let errorMessage = null;
+    if (this.props.error) {
+      errorMessage = <p>{this.props.error.message}</p>
+    }
+
     return (
       <React.Fragment >
         <AddModalSection text="Create user" clicked={this.handleOpenModal}/>
@@ -83,18 +85,19 @@ class CreateUserModal extends React.Component {
         >
           <div>
             <h2>Create new user account</h2>
+            {errorMessage}
             <form onSubmit={this.submitHandler}>
               {this.mapControlToInput("username")}
               {this.mapControlToInput("password")}
               {this.mapControlToInput("checkbox")}
             </form>
             <Button buttonType="Success">Create user</Button>
-              <Button
-                buttonType="Danger"
-                clicked={this.handleCloseModal}
-              >
-                Cancel
-              </Button>
+            <Button
+              buttonType="Danger"
+              clicked={this.handleCloseModal}
+            >
+              Cancel
+            </Button>
           </div>
         </Modal>
       </React.Fragment>
