@@ -26,9 +26,9 @@ class PHPBackend {
     );
   }
 
-  login(email, password) {
+  login(id, password) {
     const authData = {
-      email: email,
+      username: id,
       password: password
     }
 

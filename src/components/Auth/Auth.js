@@ -18,7 +18,7 @@ class Auth extends React.Component {
     this.state = {};
     this.state = updateObject(this.state, {
       controls: createControls([
-        {id: 'email', type: 'text', placeholder: 'Email'},
+        {id: 'username', type: 'text', placeholder: 'Username'},
         {id: 'password', type: 'password'}
       ])
     });
@@ -48,7 +48,7 @@ class Auth extends React.Component {
   submitHandler = (event) => {
     event.preventDefault();
     this.props.onAuth(
-      this.state.controls.email.value,
+      this.state.controls.username.value,
       this.state.controls.password.value
     );
   }

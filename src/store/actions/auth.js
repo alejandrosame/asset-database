@@ -50,12 +50,12 @@ const processAuthResponse = (response) => {
   return { token, id, expiresIn };
 }
 
-export const login = (email, password) => {
+export const login = (id, password) => {
   const backend = new Backend();
   return dispatch => {
     dispatch(authStart());
 
-    backend.login(email, password)
+    backend.login(id, password)
       .then(response => {
         processAuthResponse(response);
         const { token, id, expiresIn } = response.data;
