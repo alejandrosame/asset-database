@@ -17,7 +17,10 @@ class Auth extends React.Component {
 
     this.state = {};
     this.state = updateObject(this.state, {
-      controls: createControls(['email', 'password'])
+      controls: createControls([
+        {id: 'email', type: 'text', placeholder: 'Email'},
+        {id: 'password', type: 'password'}
+      ])
     });
   }
 

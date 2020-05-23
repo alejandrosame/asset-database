@@ -17,6 +17,7 @@ const input = (props) => {
         className={inputClasses.join(' ')}
         {...props.elementConfig}
         value={props.value}
+        autoComplete={props.autocomplete}
         onChange={props.changed}
       />;
       break;
@@ -50,6 +51,7 @@ const input = (props) => {
       inputElement = (
         <label>
           <input
+            type={"checkbox"}
             {...props.elementConfig}
             value={props.elementConfig.name}
             onChange={props.changed}
@@ -62,7 +64,9 @@ const input = (props) => {
       inputElement = <input
         className={inputClasses.join(' ')}
         {...props.elementConfig}
-        value={props.value}/>;
+        value={props.value}
+        onChange={props.changed}
+      />;
   }
 
   return (

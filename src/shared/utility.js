@@ -36,86 +36,93 @@ export const checkValidity = (value, rules) => {
   return isValid;
 }
 
-const createControl = (_controlType) => {
-  let controlType = _controlType;
-  if (_controlType.type){
-    controlType = _controlType.type;
-  }
-  switch (controlType) {
+const createControl = (control) => {
+  let content = null;
+  switch (control.type) {
+    case 'text':
+      content = {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: control.placeholder
+        },
+        value: '',
+        validation: {
+          required: true,
+          maxLength: 255
+        },
+        valid: false,
+        touched: false
+      }
+      break;
     case 'email':
-      return {
-        email: {
-          elementType: 'input',
-          elementConfig: {
-            type: 'email',
-            placeholder: 'Email address'
-          },
-          value: '',
-          validation: {
-            required: true,
-            isEmail: true
-          },
-          valid: false,
-          touched: false
-        }
+      content = {
+        elementType: 'input',
+        elementConfig: {
+          type: 'email',
+          placeholder: 'Email address'
+        },
+        value: '',
+        validation: {
+          required: true,
+          isEmail: true
+        },
+        valid: false,
+        touched: false
       }
+      break;
     case 'password':
-      return {
-        password: {
-          elementType: 'input',
-          elementConfig: {
-            type: 'password',
-            placeholder: 'Password'
-          },
-          value: '',
-          validation: {
-            required: true,
-            minLength: 6
-
-          },
-          valid: false,
-          touched: false
-        }
+      content = {
+        elementType: 'input',
+        elementConfig: {
+          type: 'password',
+          placeholder: 'Password'
+        },
+        value: '',
+        validation: {
+          required: true,
+          minLength: 6
+        },
+        valid: false,
+        touched: false
       }
+      break;
     case 'checkbox':
-      return {
-        password: {
-          elementType: 'checkbox',
-          elementConfig: {
-            ..._controlType
-          },
-          value: '',
-          valid: false,
-          touched: false
-        }
+      content = {
+        elementType: 'checkbox',
+        elementConfig: {
+          name: control.name,
+          label: control.label
+        },
+        value: '',
+        valid: false,
+        touched: false
       }
+      break;
     default:
-      return {
-        input: {
-          elementType: 'input',
-          elementConfig: {
-            type: 'text',
-            placeholder: 'Write something'
-          },
-          value: '',
-          validation: {
-            required: false
-          },
-          valid: false,
-          touched: false
-        }
+      content = {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'Write something'
+        },
+        value: '',
+        validation: {
+          required: true,
+          maxLength: 255
+        },
+        valid: false,
+        touched: false
       }
+      break;
   }
+  return content;
 }
 
 export const createControls = (controls) => {
-  let ctrls = {};
-
-  for (let idx in controls){
-    ctrls = updateObject(ctrls, createControl(controls[idx]));
-  }
-
-  return ctrls;
+  var output = {};
+  for (let ctrl of controls) output[ctrl.id]=createControl(ctrl);
+  return output;
 }
 
 export const checkEnv = (requiredEnv) => {

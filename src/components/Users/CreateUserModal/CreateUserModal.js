@@ -14,8 +14,9 @@ class CreateUserModal extends React.Component {
     this.state = {};
     this.state = updateObject(this.state, {
       controls: createControls([
-        'email',
-        {type: 'checkbox', name: 'isAdmin', label:'User has admin privileges'}
+        {id: 'username', type: 'text', placeholder: 'Username'},
+        {id: 'password', type: 'password'},
+        {id: 'checkbox', type: 'checkbox', name: 'isAdmin', label:'User has admin privileges'}
       ])
     });
     this.state = updateObject(this.state, {
@@ -27,18 +28,17 @@ class CreateUserModal extends React.Component {
     showModal: false
   }
 
-  inputChangedHandler = (event, controlName) => {
-    const updatedControls = updateObject(this.state.controls, {
-      [controlName]: updateObject(this.state.controls[controlName], {
-        value: event.target.value,
-        valid: checkValidity(
-          event.target.value,
-          this.state.controls[controlName].validation
-        ),
-        touched: true
-      })
+  inputChangedHandler = (event, id) => {
+    const updatedControls = {...this.state.controls}
+    const updatedControl = updateObject(this.state.controls[id], {
+      value: event.target.value,
+      valid: checkValidity(
+        event.target.value,
+        this.state.controls[id].validation
+      ),
+      touched: true
     });
-
+    updatedControls[id] = updatedControl;
     this.setState({controls: updatedControls});
   }
 
@@ -50,47 +50,45 @@ class CreateUserModal extends React.Component {
     this.setState({ showModal: false });
   }
 
-  render() {
-    const formElementsArray = [];
-    for (let key in this.state.controls) {
-      formElementsArray.push({
-        id: key,
-        config: this.state.controls[key]
-      });
-    }
-    let form = formElementsArray.map(formElement => (
-      <Input
-        key={formElement.id}
-        elementType={formElement.config.elementType}
-        elementConfig={formElement.config.elementConfig}
-        value={formElement.config.value}
-        invalid={!formElement.config.valid}
-        shouldValidate={formElement.config.validation}
-        touched={formElement.config.touched}
-        changed={(event) => this.inputChangedHandler(event, formElement.id)}
+  mapControlToInput = (id) => {
+    const config = this.state.controls[id];
+    return <Input
+      key={id}
+      elementType={config.elementType}
+      elementConfig={config.elementConfig}
+      value={config.value}
+      invalid={!config.valid}
+      shouldValidate={config.validation}
+      touched={config.touched}
+      autocomplete={"new-password"}
+      changed={(event) => this.inputChangedHandler(event, id)}
       />
-      )
-    );
+  }
 
+  render() {
     return (
       <React.Fragment >
-        <AddModalSection text="InviteUser" clicked={this.handleOpenModal}/>
+        <AddModalSection text="Create user" clicked={this.handleOpenModal}/>
         <Modal
           isOpen={this.state.showModal}
-          contentLabel="Send user invitation"
+          contentLabel="Create user account"
           style={{
             content: {
               width:"400px",
-              height:"250px",
+              height:"300px",
               margin: "auto",
               textAlign: "center",
             }
           }}
         >
           <div>
-            <h2>Send user invitation</h2>
-            {form}
-            <Button buttonType="Success">Send invite</Button>
+            <h2>Create new user account</h2>
+            <form onSubmit={this.submitHandler}>
+              {this.mapControlToInput("username")}
+              {this.mapControlToInput("password")}
+              {this.mapControlToInput("checkbox")}
+            </form>
+            <Button buttonType="Success">Create user</Button>
               <Button
                 buttonType="Danger"
                 clicked={this.handleCloseModal}
