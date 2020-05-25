@@ -9,8 +9,8 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-import authReducer from './store/reducers/auth';
-import { checkEnv } from './shared/utility'
+import authReducer from 'logic/store/reducers/auth';
+import { checkEnv } from 'logic/shared/utility'
 
 checkEnv(['NODE_ENV', 'REACT_APP_BACKEND']);
 

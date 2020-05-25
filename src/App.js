@@ -1,16 +1,16 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-import asyncComponent from './hoc/asyncComponent/asyncComponent';
+import asyncComponent from 'logic/hoc/asyncComponent/asyncComponent';
 
 import './App.css';
 
 const AsyncPrivate = asyncComponent(() => {
-  return import('./containers/Private/Private');
+  return import('pages/Private/Private');
 });
 
 const AsyncPublic = asyncComponent(() => {
-  return import('./containers/Public/Public');
+  return import('pages/Public/Public');
 });
 
 const App = () => {
