@@ -94,7 +94,7 @@ const createControl = (control) => {
           name: control.name,
           label: control.label
         },
-        value: '',
+        value: false,
         valid: false,
         touched: false
       }

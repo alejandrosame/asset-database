@@ -1,6 +1,8 @@
 import Modal from 'react-modal';
 import React from 'react';
 
+import Backend from '../../../Backend/Backend';
+
 import AddModalSection from '../../UI/AddModalSection/AddModalSection';
 import Button from '../../UI/Button/Button';
 import Input from '../../UI/Input/Input';
@@ -26,11 +28,13 @@ class CreateUserModal extends React.Component {
   }
 
   inputChangedHandler = (event, id) => {
+    let value = event.target.value;
+    if (id === 'checkbox') value = event.target.checked;
     const updatedControls = {...this.state.controls}
     const updatedControl = updateObject(this.state.controls[id], {
-      value: event.target.value,
+      value: value,
       valid: checkValidity(
-        event.target.value,
+        value,
         this.state.controls[id].validation
       ),
       touched: true
@@ -62,10 +66,29 @@ class CreateUserModal extends React.Component {
       />
   }
 
+  submitHandler = (event) => {
+    event.preventDefault();
+
+    const backend = new Backend();
+    backend.insert_user(
+      this.state.controls.username.value,
+      this.state.controls.password.value,
+      this.state.controls.checkbox.value
+    )
+    .then(response => {
+      this.props.onParentFetch();
+      this.handleCloseModal();
+    })
+    .catch(error => {
+      if (error.response) error = error.response.data;
+      this.setState({error: error});
+    })
+  }
+
   render() {
     let errorMessage = null;
-    if (this.props.error) {
-      errorMessage = <p>{this.props.error.message}</p>
+    if (this.state.error) {
+      errorMessage = <p>{this.state.error.message}</p>
     }
 
     return (
@@ -90,14 +113,14 @@ class CreateUserModal extends React.Component {
               {this.mapControlToInput("username")}
               {this.mapControlToInput("password")}
               {this.mapControlToInput("checkbox")}
+              <Button buttonType="Success">Create user</Button>
+              <Button
+                buttonType="Danger"
+                clicked={this.handleCloseModal}
+              >
+                Cancel
+              </Button>
             </form>
-            <Button buttonType="Success">Create user</Button>
-            <Button
-              buttonType="Danger"
-              clicked={this.handleCloseModal}
-            >
-              Cancel
-            </Button>
           </div>
         </Modal>
       </React.Fragment>

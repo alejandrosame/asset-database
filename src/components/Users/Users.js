@@ -19,6 +19,7 @@ class Users extends React.Component {
     this.state = {};
     this.state['users'] = [];
 
+    this.fetchData = this.fetchData.bind(this);
     this.fetchData();
   }
 
@@ -26,29 +27,48 @@ class Users extends React.Component {
     const backend = new Backend();
     backend.get_users()
       .then(response => this.setState({users: response.data.users}))
-      .catch(error => console.log("Could not fetch user data: " + error))
+      .catch(error => console.log("Could not fetch user data: " + error));
+  }
+
+  onUpdateUserAdminStatus = (id) => {
+    const backend = new Backend();
+    backend.update_user_admin_status(id)
+      .then(response => this.fetchData())
+      .catch(error => console.log("Could not update user admin status: " + error));
+  }
+
+  onDeleteUser = (id) => {
+    const backend = new Backend();
+    backend.delete_user(id)
+      .then(response => this.fetchData())
+      .catch(error => console.log("Could not delete user data: " + error));
   }
 
   rowRenderer = (admin) => {
-    let actions = (
-      <React.Fragment>
-        <Button buttonType="Danger">Grant admin rights</Button>
-        <Button buttonType="Danger">Delete account</Button>
-      </React.Fragment>
-    );
+    const renderActions = (id) => {
+      const text = admin?"Revoke admin rights":"Grant admin rights";
 
-    if (admin) {
-      actions = (
+      return (
         <React.Fragment>
-          <Button buttonType="Danger">Revoke admin rights</Button>
-          <Button buttonType="Danger">Delete account</Button>
+          <Button
+            buttonType="Danger"
+            clicked={() => this.onUpdateUserAdminStatus(id)}
+          >
+            {text}
+          </Button>
+          <Button
+            buttonType="Danger"
+            clicked={() => this.onDeleteUser(id)}
+          >
+            Delete account
+          </Button>
         </React.Fragment>
       );
     }
 
     return {
       getId: (row) => row.id,
-      renderColumns: (row) => [actions, row.username]
+      renderColumns: (row) => [renderActions(row.id), row.username]
     }
   }
 
@@ -60,7 +80,7 @@ class Users extends React.Component {
     return (
       <div className={classes.Page}>
         <div className={classes.Actions}>
-          <CreateUserModal />
+          <CreateUserModal onParentFetch={this.fetchData} />
         </div>
         <div className={classes.Content}>
           <Table

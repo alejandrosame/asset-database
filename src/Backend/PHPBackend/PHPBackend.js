@@ -102,6 +102,26 @@ class PHPBackend {
     return this.instances["private"].post( url, formData, config );
   }
 
+  insert_user(username, password, admin) {
+    const data = {
+      "username": username,
+      "password": password,
+      "admin": admin.toString()
+    }
+
+    let url = '/api/user/create.php';
+    return this.instances["private"].post( url, data );
+  }
+
+  update_user_admin_status(id) {
+    const data = {
+      "id": id
+    }
+
+    let url = '/api/user/changeAdminStatus.php';
+    return this.instances["private"].post( url, data );
+  }
+
   delete_tag(id) {
     const data = {
       "id": id
@@ -126,6 +146,15 @@ class PHPBackend {
     }
 
     let url = '/api/image/delete.php';
+    return this.instances["private"].post( url, data );
+  }
+
+  delete_user(id) {
+    const data = {
+      "id": id
+    }
+
+    let url = '/api/user/delete.php';
     return this.instances["private"].post( url, data );
   }
 }
