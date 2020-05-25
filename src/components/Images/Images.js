@@ -103,7 +103,7 @@ class Images extends React.Component {
 
   applyFilter = () => {
     const filteredNumbers = this.state.images.filter(image =>
-      image.number.toLowerCase()
+      image.number.toString()
       .includes(this.state.filter.toLowerCase())
     );
 
