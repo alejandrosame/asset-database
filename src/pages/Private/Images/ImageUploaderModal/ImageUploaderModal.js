@@ -5,7 +5,7 @@ import { MdBackup, MdClear, MdDone, MdErrorOutline } from 'react-icons/md';
 import update from 'immutability-helper';
 
 import Backend from 'logic/backend/Backend';
-import Button from 'components/UI/Button/Button';
+import Button from 'components/UI/Button';
 
 import classes from './ImageUploaderModal.module.css';
 

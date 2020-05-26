@@ -3,7 +3,7 @@ import React from 'react';
 import assetMapper from './Asset/AssetMapper';
 import Backend from 'logic/backend/Backend';
 
-import Button from 'components/UI/Button/Button';
+import Button from 'components/UI/Button';
 import Table from 'logic/hoc/Table/Table';
 
 import * as classes from './AssetEditor.module.css';

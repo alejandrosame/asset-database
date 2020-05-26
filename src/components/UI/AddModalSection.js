@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Button from '../Button/Button';
+import Button from 'components/UI/Button';
 
 import classes from './AddModalSection.module.css';
 

@@ -2,14 +2,14 @@ import React from 'react';
 
 import Backend from 'logic/backend/Backend';
 
-import Button from 'components/UI/Button/Button';
-import Table from 'components/UI/Table/Table';
+import Button from 'components/UI/Button';
+import Table from 'components/UI/Table';
 
-import CreateUserModal from './CreateUserModal/CreateUserModal';
+import CreateUserModal from './CreateUserModal';
 import withAuth from 'logic/hoc/withAuth/withAuth';
 
 import classes from './Users.module.css';
-import genericPrivateTableClasses from 'components/UI/Table/styles/genericPrivate.module.css';
+import gptClasses from 'components/UI/styles/genericPrivateTable.module.css';
 
 
 class Users extends React.Component {
@@ -84,7 +84,7 @@ class Users extends React.Component {
         </div>
         <div className={classes.Content}>
           <Table
-            classModules={[classes, genericPrivateTableClasses]}
+            classModules={[classes, gptClasses]}
             title={"Admins"}
             columnTitles={columnTitles}
             showHeader={true}
@@ -92,7 +92,7 @@ class Users extends React.Component {
             data={adminData}
             />
           <Table
-            classModules={[classes, genericPrivateTableClasses]}
+            classModules={[classes, gptClasses]}
             title={"Users"}
             columnTitles={columnTitles}
             showHeader={true}

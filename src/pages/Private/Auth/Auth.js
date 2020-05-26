@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import Button from 'components/UI/Button/Button';
-import Input from 'components/UI/Input/Input';
+import Button from 'components/UI/Button';
+import Input from 'components/UI/Input';
 import Spinner from 'components/UI/Spinner/Spinner';
 
 import { checkValidity, updateObject, createControls } from 'logic/shared/utility';

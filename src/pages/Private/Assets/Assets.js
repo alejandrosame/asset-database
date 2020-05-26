@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from 'react-modal';
 
 import AdvancedTable from 'logic/hoc/AdvancedTable/AdvancedTable';
-import AddModalSection from 'components/UI/AddModalSection/AddModalSection';
+import AddModalSection from 'components/UI/AddModalSection';
 import InputWithIcon from 'components/UI/InputWithIcon/InputWithIcon';
 
 import AssetEditor from 'components/AssetEditor/AssetEditor';

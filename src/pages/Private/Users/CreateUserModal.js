@@ -3,9 +3,9 @@ import React from 'react';
 
 import Backend from 'logic/backend/Backend';
 
-import AddModalSection from 'components/UI/AddModalSection/AddModalSection';
-import Button from 'components/UI/Button/Button';
-import Input from 'components/UI/Input/Input';
+import AddModalSection from 'components/UI/AddModalSection';
+import Button from 'components/UI/Button';
+import Input from 'components/UI/Input';
 
 import { checkValidity, updateObject, createControls } from 'logic/shared/utility';
 
@@ -86,11 +86,6 @@ class CreateUserModal extends React.Component {
   }
 
   render() {
-    let errorMessage = null;
-    if (this.state.error) {
-      errorMessage = <p>{this.state.error.message}</p>
-    }
-
     return (
       <React.Fragment >
         <AddModalSection text="Create user" clicked={this.handleOpenModal}/>
@@ -108,7 +103,6 @@ class CreateUserModal extends React.Component {
         >
           <div>
             <h2>Create new user account</h2>
-            {errorMessage}
             <form onSubmit={this.submitHandler}>
               {this.mapControlToInput("username")}
               {this.mapControlToInput("password")}

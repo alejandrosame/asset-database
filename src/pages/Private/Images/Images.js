@@ -1,7 +1,7 @@
 import update from 'immutability-helper';
 import React from 'react';
 
-import AddModalSection from 'components/UI/AddModalSection/AddModalSection';
+import AddModalSection from 'components/UI/AddModalSection';
 import Backend from 'logic/backend/Backend';
 import ImageEditor from './ImageEditor/ImageEditor';
 import ImageUploaderModal from './ImageUploaderModal/ImageUploaderModal';

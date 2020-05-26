@@ -2,7 +2,7 @@ import React from 'react';
 
 import ImageUploading from "react-images-uploading";
 
-import Button from '../../../../UI/Button/Button';
+import Button from 'components/UI/Button';
 
 //import classes from './Viz.module.css';
 
