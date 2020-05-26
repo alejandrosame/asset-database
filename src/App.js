@@ -1,4 +1,5 @@
 import React from 'react';
+import Notifications from 'react-notify-toast';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import asyncComponent from 'logic/hoc/asyncComponent/asyncComponent';
@@ -24,6 +25,7 @@ const App = () => {
 
   return (
     <div className="App">
+      <Notifications />
       {routes}
     </div>
   );
