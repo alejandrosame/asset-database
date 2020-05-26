@@ -10,7 +10,7 @@ const toolbar = (props) => {
   if(props.isAuthenticated && props.match.path.includes("private")) {
     nav = (
       <nav className={classes.DesktopOnly}>
-        <NavigationItems/>
+        <NavigationItems isAdmin={props.isAdmin} />
       </nav>
     )
   }

@@ -1,4 +1,5 @@
 import React from 'react';
+import {notify} from 'react-notify-toast';
 
 import Backend from 'logic/backend/Backend';
 
@@ -27,21 +28,23 @@ class Users extends React.Component {
     const backend = new Backend();
     backend.get_users()
       .then(response => this.setState({users: response.data.users}))
-      .catch(error => console.log("Could not fetch user data: " + error));
+      .catch(error => notify.show("Could not fetch user data: " + error, 'error'));
   }
 
   onUpdateUserAdminStatus = (id) => {
     const backend = new Backend();
     backend.update_user_admin_status(id)
       .then(response => this.fetchData())
-      .catch(error => console.log("Could not update user admin status: " + error));
+      .catch(error =>
+        notify.show("Could not update user admin status: " + error, 'error')
+      );
   }
 
   onDeleteUser = (id) => {
     const backend = new Backend();
     backend.delete_user(id)
       .then(response => this.fetchData())
-      .catch(error => console.log("Could not delete user data: " + error));
+      .catch(error => notify.show("Could not delete user data: " + error, 'error'));
   }
 
   rowRenderer = (admin) => {

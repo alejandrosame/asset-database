@@ -19,6 +19,12 @@ class Private extends React.Component {
   }
 
   render() {
+    let usersRoute = null;
+    if (this.props.isAdmin) {
+      usersRoute = <Route path={`${this.props.match.path}/users`} exact
+        render={() => <Users isAuthenticated={this.props.isAuthenticated}/>}
+      />;
+    }
 
     return (
       <Layout {...this.props}>
@@ -27,9 +33,7 @@ class Private extends React.Component {
           <Route path={`${this.props.match.path}/images`} exact
             render={() => <Images isAuthenticated={this.props.isAuthenticated}/>}
           />
-          <Route path={`${this.props.match.path}/users`} exact
-            render={() => <Users isAuthenticated={this.props.isAuthenticated}/>}
-          />
+          {usersRoute}
           <Route path={`${this.props.match.path}/tags`} exact
             render={() => <Tags isAuthenticated={this.props.isAuthenticated}/>}
           />
@@ -45,7 +49,8 @@ class Private extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    isAuthenticated: state.auth.token !== null
+    isAuthenticated: state.auth.token !== null,
+    isAdmin: state.auth.isAdmin
   }
 }
 

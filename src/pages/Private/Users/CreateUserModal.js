@@ -1,5 +1,6 @@
-import Modal from 'react-modal';
 import React from 'react';
+import Modal from 'react-modal';
+import {notify} from 'react-notify-toast';
 
 import Backend from 'logic/backend/Backend';
 
@@ -77,11 +78,12 @@ class CreateUserModal extends React.Component {
     )
     .then(response => {
       this.props.onParentFetch();
+      notify.show('User created successfully!', 'success');
       this.handleCloseModal();
     })
     .catch(error => {
-      if (error.response) error = error.response.data;
-      this.setState({error: error});
+      const message = error.response.data.message;
+      notify.show(message, 'error');
     })
   }
 

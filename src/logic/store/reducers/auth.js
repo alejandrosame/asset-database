@@ -4,6 +4,7 @@ import { updateObject } from '../../shared/utility';
 const initialState = {
   token: null,
   userId: null,
+  isAdmin: null,
   error: null,
   loading: false,
   authRedirectPath: '/'
@@ -17,6 +18,7 @@ const authSuccess = (state, action) => {
   return updateObject(state, {
     token: action.idToken,
     userId: action.userId,
+    isAdmin: action.isAdmin,
     error: null,
     loading: false
   });
@@ -26,6 +28,7 @@ const authRenew = (state, action) => {
   return updateObject(state, {
     token: action.idToken,
     userId: action.userId,
+    isAdmin: action.isAdmin,
     error: null,
     loading: false
   });
@@ -41,7 +44,8 @@ const authFailure = (state, action) => {
 const authLogout = (state, action) => {
   return updateObject(state, {
     token: null,
-    userId: null
+    userId: null,
+    isAdmin: null
   });
 }
 

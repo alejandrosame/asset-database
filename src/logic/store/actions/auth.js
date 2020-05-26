@@ -7,19 +7,21 @@ export const authStart = () => {
   };
 };
 
-export const authSuccess = (token, userId) => {
+export const authSuccess = (token, userId, isAdmin) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
     idToken: token,
-    userId: userId
+    userId: userId,
+    isAdmin: isAdmin === null?false:JSON.parse(isAdmin)
   };
 };
 
-export const authRenew = (token, userId) => {
+export const authRenew = (token, userId, isAdmin) => {
   return {
     type: actionTypes.AUTH_RENEW,
     idToken: token,
-    userId: userId
+    userId: userId,
+    isAdmin: isAdmin === null?false:JSON.parse(isAdmin)
   };
 };
 
@@ -34,6 +36,7 @@ export const logout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('expirationDate');
   localStorage.removeItem('userId');
+  localStorage.removeItem('isAdmin');
   clearTimeouts();
   return {
     type: actionTypes.AUTH_LOGOUT
@@ -41,13 +44,14 @@ export const logout = () => {
 }
 
 const processAuthResponse = (response) => {
-  const { token, id, expiresIn } = response.data;
+  const { token, id, isAdmin, expiresIn } = response.data;
   const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
   localStorage.setItem('token', token);
   localStorage.setItem('expirationDate', expirationDate);
   localStorage.setItem('userId', id);
+  localStorage.setItem('isAdmin', isAdmin);
 
-  return { token, id, expiresIn };
+  return { token, id, isAdmin, expiresIn };
 }
 
 export const login = (id, password) => {
@@ -58,8 +62,8 @@ export const login = (id, password) => {
     backend.login(id, password)
       .then(response => {
         processAuthResponse(response);
-        const { token, id, expiresIn } = response.data;
-        dispatch(authSuccess(token, id));
+        const { token, id, isAdmin, expiresIn } = response.data;
+        dispatch(authSuccess(token, id, isAdmin));
         dispatch(handleLogout(expiresIn));
       })
       .catch(error => {
@@ -76,8 +80,8 @@ const renewToken = () => {
     backend.renew()
       .then(response => {
         processAuthResponse(response);
-        const { token, id, expiresIn } = response.data;
-        dispatch(authRenew(token, id));
+        const { token, id, isAdmin, expiresIn } = response.data;
+        dispatch(authRenew(token, id, isAdmin));
         dispatch(handleLogout(expiresIn));
       })
       .catch(error => {
@@ -103,8 +107,9 @@ export const authCheckState = () => {
       const expirationDate = new Date(localStorage.getItem('expirationDate'));
       if (expirationDate > new Date()) {
         const userId = localStorage.getItem('userId');
+        const isAdmin = localStorage.getItem('isAdmin');
         const expiresIn = (expirationDate.getTime() - new Date().getTime()) / 1000;
-        dispatch(authSuccess(token, userId));
+        dispatch(authSuccess(token, userId, isAdmin));
         dispatch(handleLogout(expiresIn));
       } else {
         dispatch(logout());
