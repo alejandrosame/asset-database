@@ -6,7 +6,7 @@ import AddModalSection from 'components/UI/AddModalSection';
 import InputWithIcon from 'components/UI/InputWithIcon/InputWithIcon';
 
 import AssetEditor from 'components/AssetEditor/AssetEditor';
-import assetMapper from './Asset/AssetMapper';
+import assetMapper from './AssetMapper';
 import withAuth from 'logic/hoc/withAuth/withAuth';
 
 import assetsData from 'assets/data/assets.json';

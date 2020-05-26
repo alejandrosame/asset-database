@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Assets from './Assets/Assets';
-import Layout from 'pages/Layout/Layout';
+import Assets from './public/Assets';
+import Layout from 'pages/Layout';
 
 const Public = () => {
   return (

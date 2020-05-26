@@ -2,7 +2,7 @@ import update from 'immutability-helper';
 import React from 'react';
 
 import Backend from 'logic/backend/Backend';
-import TagEditor from './TagEditor/TagEditor';
+import TagEditor from './TagEditor';
 import Spinner from 'components/UI/Spinner/Spinner';
 
 import withAuth from 'logic/hoc/withAuth/withAuth';

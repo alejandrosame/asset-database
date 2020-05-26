@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AdvancedTable from 'logic/hoc/AdvancedTable/AdvancedTable';
-import assetMapper from './Asset/AssetMapper';
+import assetMapper from './AssetMapper';
 import Tag from 'components/UI/Tag/Tag';
 
 import classes from './Assets.module.css';

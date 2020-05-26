@@ -1,9 +1,9 @@
 import React from 'react';
 
-import NavigationItems from '../NavigationItems/NavigationItems';
+import NavigationItems from 'components/navigation/NavigationItems';
 
 import classes from './Toolbar.module.css';
-import imgLogo from '../../../assets/logo-temp.png';
+import imgLogo from 'assets/logo-temp.png';
 
 const toolbar = (props) => {
   let nav = null;

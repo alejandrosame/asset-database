@@ -6,7 +6,7 @@ import Backend from 'logic/backend/Backend';
 import Button from 'components/UI/Button';
 import Table from 'components/UI/Table';
 
-import CreateUserModal from './CreateUserModal';
+import CreateUserModal from './UsersCreateModal';
 import withAuth from 'logic/hoc/withAuth/withAuth';
 
 import classes from './Users.module.css';

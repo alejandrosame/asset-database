@@ -4,12 +4,12 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import * as actions from 'logic/store/actions';
 
-import Layout from 'pages/Layout/Layout';
-import Assets from 'pages/Private/Assets/Assets';
-import Images from 'pages/Private/Images/Images';
-import Logout from 'pages/Private/Logout/Logout';
-import Tags from 'pages/Private/Tags/Tags';
-import Users from 'pages/Private/Users/Users';
+import Layout from 'pages/Layout';
+import Assets from 'pages/private/Assets';
+import Images from 'pages/private/Images';
+import Logout from 'pages/private/Logout';
+import Tags from 'pages/private/Tags';
+import Users from 'pages/private/Users';
 
 
 class Private extends React.Component {

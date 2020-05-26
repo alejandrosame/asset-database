@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Toolbar from 'components/Navigation/Toolbar/Toolbar';
+import Toolbar from 'components/navigation/Toolbar';
 
 import classes from './Layout.module.css';
 

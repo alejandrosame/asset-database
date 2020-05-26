@@ -7,11 +7,11 @@ import asyncComponent from 'logic/hoc/asyncComponent/asyncComponent';
 import './App.css';
 
 const AsyncPrivate = asyncComponent(() => {
-  return import('pages/Private/Private');
+  return import('pages/Private');
 });
 
 const AsyncPublic = asyncComponent(() => {
-  return import('pages/Public/Public');
+  return import('pages/Public');
 });
 
 const App = () => {

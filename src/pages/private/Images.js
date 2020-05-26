@@ -3,8 +3,8 @@ import React from 'react';
 
 import AddModalSection from 'components/UI/AddModalSection';
 import Backend from 'logic/backend/Backend';
-import ImageEditor from './ImageEditor/ImageEditor';
-import ImageUploaderModal from './ImageUploaderModal/ImageUploaderModal';
+import ImageEditor from './ImageEditor';
+import ImageUploaderModal from './ImageUploaderModal';
 import Spinner from 'components/UI/Spinner/Spinner';
 
 import withAuth from 'logic/hoc/withAuth/withAuth';
