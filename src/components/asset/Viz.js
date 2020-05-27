@@ -4,7 +4,7 @@ import { MdClose } from 'react-icons/md';
 
 import classes from './Viz.module.css';
 
-const images = require.context('../../../../assets/art/', true);
+const images = require.context('assets/art/', true);
 
 Modal.setAppElement("#root");
 

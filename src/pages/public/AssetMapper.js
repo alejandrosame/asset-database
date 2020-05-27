@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Notes from 'components/Public/Asset/Notes/Notes';
-import TextList from 'components/Public/Asset/TextList/TextList';
-import Viz from 'components/Public/Asset/Viz/Viz';
+import Notes from 'components/asset/Notes';
+import TextList from 'components/asset/TextList';
+import Viz from 'components/asset/Viz';
 
 
 const assetMapper = (productFn, tagFn, productsFilter, tagsFilter) => {
