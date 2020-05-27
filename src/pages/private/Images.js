@@ -7,7 +7,7 @@ import ImageEditor from './ImageEditor';
 import ImageUploaderModal from './ImageUploaderModal';
 import Spinner from 'components/UI/Spinner/Spinner';
 
-import withAuth from 'logic/hoc/withAuth/withAuth';
+import withAuth from 'logic/hoc/withAuth';
 
 const applySetResult = (result) => (prevState) => ({
   images: result.images,

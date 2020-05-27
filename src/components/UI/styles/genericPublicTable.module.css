@@ -1,0 +1,40 @@
+.Table,
+.Table tr {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.Table {
+  width: 90%;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.Table td {
+  padding: 10px;
+}
+
+/* Asset */
+.Table tr:first-child td:nth-child(1) {
+  min-width: 230px;
+}
+
+/* Print size */
+.Table tr:first-child td:nth-child(2) {
+  min-width: 122px;
+}
+
+/* Product */
+.Table tr:first-child td:nth-child(3) {
+  min-width: 122px;
+}
+
+/* Tags */
+.Table tr:first-child td:nth-child(4) {
+  width: 33%;
+}
+
+/* Notes */
+.Table tr:first-child td:nth-child(5) {
+  width: 100%;
+}

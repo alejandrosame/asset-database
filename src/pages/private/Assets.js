@@ -1,15 +1,18 @@
 import React from 'react';
 import Modal from 'react-modal';
 
-import AdvancedTable from 'logic/hoc/AdvancedTable/AdvancedTable';
+import Table from 'components/UI/AdvancedTable';
+
 import AddModalSection from 'components/UI/AddModalSection';
-import InputWithIcon from 'components/UI/InputWithIcon/InputWithIcon';
+import InputWithIcon from 'components/UI/InputWithIcon';
 
 import AssetEditor from 'components/AssetEditor/AssetEditor';
 import assetMapper from './AssetMapper';
-import withAuth from 'logic/hoc/withAuth/withAuth';
+import withAuth from 'logic/hoc/withAuth';
 
 import assetsData from 'assets/data/assets.json';
+
+import gptClasses from 'components/UI/styles/genericPublicTable.module.css';
 
 Modal.setAppElement("#root");
 
@@ -40,7 +43,6 @@ const applySetError = (prevState) => ({
 
 const onRowClick = (record, index) => {
   console.log(`Click nth(${index}) row of parent, record.name: ${record.key}`);
-
 };
 
 const getEmptyAsset = () => {
@@ -148,7 +150,9 @@ class Assets extends React.Component {
       />
     );
 
-    const mapper = assetMapper((el) => console.log(el), (el) => console.log(el));
+    const columnTitles = ['Asset', 'Print Size', 'Product', 'Tags', 'Notes'];
+
+    const mapper = assetMapper();
     return (
       <React.Fragment>
         <AddModalSection clicked={() => this.handleOpenModal()} text="Add assets" />
@@ -157,16 +161,18 @@ class Assets extends React.Component {
           keyUp={(event) => this.onKeyUp(event, this.onAddFilter)}
           placeholder="Type to filter assets"
         />
-        <AdvancedTable
-          list={mapper(this.filterAssets(this.state.hits))}
-          onRow={(record, index) => ({
-            onClick: onRowClick.bind(null, record, index)
-          })}
+        <Table
+          classModules={[gptClasses]}
+          title={"Creatures"}
+          showTitle={false}
+          columnTitles={columnTitles}
+          showHeader={true}
+          rowRenderer={mapper}
+          data={this.filterAssets(this.state.hits)}
           isError={this.state.isError}
           isLoading={this.state.isLoading}
           page={this.state.page}
           onPaginatedSearch={this.onPaginatedSearch}
-          showHeader={true}
         />
 
         <Modal

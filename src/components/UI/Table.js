@@ -8,14 +8,14 @@ const applyClass = (classModules) => (className) => {
 }
 
 const table = ({
-    classModules=[], title=null, columnTitles=[], showHeader=false,
-    onRowClick=null, rowRenderer,
+    classModules=[], title=null, columnTitles=[], showTitle=false, showHeader=false,
+    rowRenderer,
     data
   }) => {
 
   return (
     <div className={applyClass(classModules)("Table")}>
-      <h2 className={applyClass(classModules)("Title")}>{title}</h2>
+      <h2 className={showTitle?applyClass(classModules)("Title"):classes.Hidden}>{title}</h2>
       <div className={applyClass(classModules)("InnerRegion")}>
         <table>
           <thead className={showHeader?null:classes.Hidden}>

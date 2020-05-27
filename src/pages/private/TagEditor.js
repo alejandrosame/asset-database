@@ -1,7 +1,7 @@
 import React from 'react';
 
-import InputWithIcon from 'components/UI/InputWithIcon/InputWithIcon';
-import Tag from 'components/UI/Tag/Tag';
+import InputWithIcon from 'components/UI/InputWithIcon';
+import Tag from 'components/UI/Tag';
 
 import classes from './TagEditor.module.css';
 

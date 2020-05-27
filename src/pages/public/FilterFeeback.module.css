@@ -1,10 +1,10 @@
-.Announcement {
+.FeedbackArea {
   display: flex;
   align-items: left;
   margin-left: 60px;
   margin-right: 60px;
 }
 
-.AnnouncementText {
+.FeedbackText {
   margin-top: 13px;
 }

@@ -7,7 +7,7 @@ import Button from 'components/UI/Button';
 import Table from 'components/UI/Table';
 
 import CreateUserModal from './UsersCreateModal';
-import withAuth from 'logic/hoc/withAuth/withAuth';
+import withAuth from 'logic/hoc/withAuth';
 
 import classes from './Users.module.css';
 import gptClasses from 'components/UI/styles/genericPrivateTable.module.css';

@@ -5,7 +5,7 @@ import Backend from 'logic/backend/Backend';
 import TagEditor from './TagEditor';
 import Spinner from 'components/UI/Spinner/Spinner';
 
-import withAuth from 'logic/hoc/withAuth/withAuth';
+import withAuth from 'logic/hoc/withAuth';
 
 const applySetResult = (result) => (prevState) => ({
   tags: result.tags,

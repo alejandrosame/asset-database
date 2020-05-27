@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Button from 'components/UI/Button';
-import InputWithIcon from 'components/UI/InputWithIcon/InputWithIcon';
+import InputWithIcon from 'components/UI/InputWithIcon';
 
 import classes from './ImageEditor.module.css';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import Notifications from 'react-notify-toast';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-import asyncComponent from 'logic/hoc/asyncComponent/asyncComponent';
+import asyncComponent from 'logic/hoc/asyncComponent';
 
 import './App.css';
 

@@ -1,7 +1,6 @@
 import React from 'react';
 
-//import InputWithIcon from '../../../UI/InputWithIcon/InputWithIcon';
-import Tag from '../../../UI/Tag/Tag';
+import Tag from 'components/UI/Tag';
 
 import classes from './TagSelector.module.css';
 
@@ -24,8 +23,6 @@ class tagSelector extends React.Component {
   onSelect(tag) {
     console.log(`Select tag ${tag}.`);
   }
-
-  //({ defaultValues, options, clicked }) =>
 
   render() {
     const selectable = this.props.options.filter(
