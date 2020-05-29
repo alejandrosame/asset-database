@@ -1,13 +1,14 @@
 import React from 'react';
+import {notify} from 'react-notify-toast';
 
 import assetMapper from './AssetMapper';
 import FilterFeedback from './FilterFeedback';
 
 import Table from 'components/UI/AdvancedTable';
 
-import gptClasses from 'components/UI/styles/genericPublicTable.module.css';
+import Backend from 'logic/backend/Backend';
 
-import assetsData from 'assets/data/assets.json';
+import gptClasses from 'components/UI/styles/genericPublicTable.module.css';
 
 const applyUpdateResult = (result) => (prevState) => ({
   hits: [...prevState.hits, ...result.hits],
@@ -57,24 +58,19 @@ class Assets extends React.Component {
     this.fetchAssets(this.state.page + 1);
 
   fetchAssets = (page) => {
-    const numberFetched = 7;
+    const maxFetch = 10;
+    const backend = new Backend();
     this.setState({ isLoading: true });
 
-    setTimeout(
-      () => {
-        let minIndex = page*numberFetched;
-        let maxIndex = minIndex+numberFetched;
-        if (maxIndex > assetsData.length) maxIndex = assetsData.length;
-
+    backend.get_assets(maxFetch, page)
+      .then(response => {
         const result = {
-          hits: assetsData.slice(minIndex, maxIndex),
+          hits: response.data.assets,
           page: page
         };
-
         this.onSetResult(result, page);
-      },
-      1000
-    )
+      })
+      .catch(error => notify.show("Something went wrong. Please, refresh page."))
   }
 
   onSetError = () =>

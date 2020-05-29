@@ -45,6 +45,11 @@ class PHPBackend {
     return this.instances["public"].defaults.baseURL;
   }
 
+  get_assets(maxFetch=null, page=null) {
+    let url = '/api/asset/read.php';
+    return this.instances["private"].get( url );
+  }
+
   get_tags() {
     let url = '/api/tag/read.php';
     return this.instances["private"].get( url );

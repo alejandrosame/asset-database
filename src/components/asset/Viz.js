@@ -4,8 +4,6 @@ import { MdClose } from 'react-icons/md';
 
 import classes from './Viz.module.css';
 
-const images = require.context('assets/art/', true);
-
 Modal.setAppElement("#root");
 
 class Viz extends React.Component {
@@ -13,8 +11,13 @@ class Viz extends React.Component {
     showModal: false
   }
 
+  isDisabled = () => {
+    const {disabled, thumb_frontURL, thumb_backURL} = this.props;
+    return disabled || thumb_frontURL === null || thumb_backURL === null;
+  }
+
   handleOpenModal = () => {
-    if (this.props.disabled) return;
+    if (this.isDisabled()) return;
     this.setState({ showModal: true });
   }
 
@@ -23,20 +26,41 @@ class Viz extends React.Component {
   }
 
   render() {
-    const placeholderName = [this.props.number, this.props.name].join('-');
-    const numberName = [this.props.number, this.props.name].join(' ');
+    const { number, name, baseImageURL, thumb_frontURL, thumb_backURL,
+            full_frontURL, full_backURL
+          } = this.props;
+    const placeholderName = [number, name].join('-');
+    const numberName = [number, name].join(' ');
+    const missingImage = <div className={classes.Missing} >?</div>;
+    const frontThumb = (
+      <img
+        src={baseImageURL + thumb_frontURL}
+        alt={placeholderName + " Front"}
+      />
+    );
+    const backThumb = (
+      <img
+        src={baseImageURL + thumb_backURL}
+        alt={placeholderName + " Back"}
+      />
+    );
+
+    let classesArray = [];
+    if (!this.isDisabled()) classesArray.push(classes.Enabled);
 
     return (
       <React.Fragment>
-        <div className={classes.Img} onClick={this.handleOpenModal}>
-          <img
-            src={images(this.props.thumbA)}
-            alt={placeholderName + " Front"}
-          />
-          <img
-            src={images(this.props.thumbB)}
-            alt={placeholderName + "Back"}
-          />
+        <div className={classesArray.join(' ')} onClick={this.handleOpenModal}>
+          {
+            thumb_frontURL === null
+              ? missingImage
+              : frontThumb
+          }
+          {
+            thumb_backURL === null
+              ? missingImage
+              : backThumb
+          }
         </div>
         <div>{numberName}</div>
 
@@ -60,12 +84,12 @@ class Viz extends React.Component {
           >
             <img
               style={{maxHeight: "100%"}}
-              src={images(this.props.fullA)}
+              src={baseImageURL + full_frontURL}
               alt={placeholderName + " Front"}
               />
             <img
               style={{maxHeight: "100%"}}
-              src={images(this.props.fullB)}
+              src={baseImageURL + full_backURL}
               alt={placeholderName + "Back"}
               />
           </div>
