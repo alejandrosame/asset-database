@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { capitalize } from 'logic/shared/utility';
+
 import classes from './TextList.module.css';
 
 const textList = ({list, clicked, filtered}) =>
@@ -13,7 +15,7 @@ const textList = ({list, clicked, filtered}) =>
             key={element}
             onClick={() => clicked ? clicked(element) : null}
       >
-        {element}
+        {capitalize(element)}
       </span>
     )}
   )
