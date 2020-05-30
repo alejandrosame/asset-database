@@ -51,7 +51,7 @@ class Assets extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchAssets(0);
+    this.fetchAssets(1);
   }
 
   onPaginatedSearch = (e) =>

@@ -46,8 +46,20 @@ class PHPBackend {
   }
 
   get_assets(maxFetch=null, page=null) {
-    let url = '/api/asset/read.php';
-    return this.instances["private"].get( url );
+    if (page === null) {
+      const url = '/api/asset/read.php';
+      return this.instances["private"].get( url );
+    }
+
+    const data = {
+      params: {
+        ["page"]: page,
+        ["page_size"]: maxFetch
+      }
+    }
+
+    const url = '/api/asset/readPage.php';
+    return this.instances["private"].get( url, data );
   }
 
   get_tags() {
