@@ -113,9 +113,11 @@ class Assets extends React.Component {
     this.setState(applyEditorSetResult(result))
 
   onKeyUp = (event, actionFn) => {
+    const e = {...event};
+    if (e.target.value === this.state.filter) return;
+
     clearTimeout(this.state.timeout);
 
-    const e = {...event};
     const timeout = setTimeout(() => actionFn(e.target.value), 500);
 
     this.setState( { timeout: timeout } );
