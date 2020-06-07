@@ -10,6 +10,8 @@ import Backend from 'logic/backend/Backend';
 
 import gptClasses from 'components/UI/styles/genericPublicTable.module.css';
 
+const START_PAGE = 1;
+
 const applyUpdateResult = (result) => (prevState) => ({
   hits: [...prevState.hits, ...result.hits],
   page: result.page,
@@ -51,7 +53,7 @@ class Assets extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchAssets(1);
+    this.fetchAssets(START_PAGE);
   }
 
   onPaginatedSearch = (e) =>
@@ -77,7 +79,7 @@ class Assets extends React.Component {
     this.setState(applySetError);
 
   onSetResult = (result, page) =>
-    page === 0
+    page === START_PAGE
       ? this.setState(applySetResult(result))
       : this.setState(applyUpdateResult(result));
 

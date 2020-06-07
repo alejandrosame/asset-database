@@ -45,20 +45,33 @@ class PHPBackend {
     return this.instances["public"].defaults.baseURL;
   }
 
-  get_assets(maxFetch=null, page=null) {
+  get_assets(maxFetch=null, page=null, searchTerm=null) {
     if (page === null) {
       const url = '/api/asset/read.php';
-      return this.instances["private"].get( url );
+      return this.instances["public"].get( url );
     }
 
     const data = {
       params: {
-        ["page"]: page,
-        ["page_size"]: maxFetch
+        page: page,
+        page_size: maxFetch,
+        searchTerm: searchTerm
       }
     }
 
     const url = '/api/asset/readPage.php';
+    return this.instances["public"].get( url, data );
+  }
+
+  search_asset_upsert(number, order) {
+    const data = {
+      params: {
+        number: number,
+        order: order
+      }
+    }
+
+    const url = '/api/asset/searchUpsert.php';
     return this.instances["private"].get( url, data );
   }
 
@@ -128,6 +141,11 @@ class PHPBackend {
 
     let url = '/api/user/create.php';
     return this.instances["private"].post( url, data );
+  }
+
+  insert_asset(asset) {
+    let url = '/api/asset/create.php';
+    return this.instances["private"].post( url, asset );
   }
 
   update_user_admin_status(id) {

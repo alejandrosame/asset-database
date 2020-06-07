@@ -136,3 +136,21 @@ export const checkEnv = (requiredEnv) => {
 export const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
+
+
+export function splitCSVLine(str) {
+  return str.split(',')
+    .reduce( (accum, curr) => {
+        if(accum.isConcatting) {
+          accum.soFar[accum.soFar.length-1] += ',' + curr;
+        } else {
+          accum.soFar.push(curr);
+        }
+        if(curr.split('"').length % 2 === 0) {
+          accum.isConcatting = !accum.isConcatting
+        }
+        return accum;
+      }, {soFar:[], isConcatting:false}
+    ).soFar
+    .map(entry => entry.split('"').join('').trim());
+}

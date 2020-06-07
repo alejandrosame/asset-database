@@ -1,20 +1,23 @@
 import React from 'react';
 import Modal from 'react-modal';
+import {notify} from 'react-notify-toast';
 
+import assetMapper from './AssetMapper';
 import Table from 'components/UI/AdvancedTable';
 
-import AddModalSection from 'components/UI/AddModalSection';
 import InputWithIcon from 'components/UI/InputWithIcon';
 
-import AssetEditor from 'components/AssetEditor/AssetEditor';
-import assetMapper from './AssetMapper';
+import AssetUploaderModal from './AssetUploaderModal';
+
 import withAuth from 'logic/hoc/withAuth';
+import Backend from 'logic/backend/Backend';
 
-import assetsData from 'assets/data/assets.json';
-
-import gptClasses from 'components/UI/styles/genericPublicTable.module.css';
+import gptClasses from 'components/UI/styles/genericPrivateTable.module.css';
+import pageClasses from 'components/UI/styles/Page.module.css';
 
 Modal.setAppElement("#root");
+
+const START_PAGE = 1;
 
 const applyUpdateResult = (result) => (prevState) => ({
   hits: [...prevState.hits, ...result.hits],
@@ -41,88 +44,73 @@ const applySetError = (prevState) => ({
   isLoading: false,
 });
 
+/*
 const onRowClick = (record, index) => {
   console.log(`Click nth(${index}) row of parent, record.name: ${record.key}`);
 };
+*/
 
-const getEmptyAsset = () => {
-  return [{
-      "id": '',
-      "number": "",
-      "name": "",
-      "thumbA": "",
-      "thumbB": "",
-      "fullA": "",
-      "fullB": "",
-      "printSize": "",
-      "product": "",
-      "tags": [],
-      "notes": ""
-  }]
-}
+const resetState = {
+  hits: [],
+  editorHits: [],
+  page: null,
+  filter: '',
+  isError: false,
+  isLoading: false,
+  timeout: null
+ };
 
 class Assets extends React.Component {
-  state = {
-    hits: [],
-    editorHits: [],
-    page: null,
-    filter: '',
-    isError: false,
-    isLoading: false,
-    timeout: null
-  };
+  constructor(props) {
+    super(props);
+    this.state = {...resetState};
+    this.onReset = this.onReset.bind(this);
+  }
 
   componentDidMount() {
-    this.fetchAssets(0);
+    this.fetchAssets(START_PAGE);
+  }
+
+  onReset() {
+    this.setState({...resetState});
+    this.fetchAssets(START_PAGE);
+  }
+
+  onResetWithFilter = (filterValue) => {
+    this.setState( { ...resetState, filter: filterValue } );
+    this.fetchAssets(START_PAGE);
   }
 
   onPaginatedSearch = (e) =>
     this.fetchAssets(this.state.page + 1);
 
   fetchAssets = (page) => {
-    const numberFetched = 7;
+    const maxFetch = 10;
+    const backend = new Backend();
+    const { filter } = this.state;
     this.setState({ isLoading: true });
 
-    setTimeout(
-      () => {
-        let minIndex = page*numberFetched;
-        let maxIndex = minIndex+numberFetched;
-        if (maxIndex > assetsData.length) maxIndex = assetsData.length;
-
+    backend.get_assets(maxFetch, page, filter)
+      .then(response => {
         const result = {
-          hits: assetsData.slice(minIndex, maxIndex),
+          hits: response.data.assets,
           page: page
         };
-
         this.onSetResult(result, page);
-      },
-      1000
-    )
+      })
+      .catch(error => notify.show("Something went wrong. Please, refresh page."))
   }
 
   onSetError = () =>
     this.setState(applySetError);
 
   onSetResult = (result, page) =>
-    page === 0
+    page === START_PAGE
       ? this.setState(applySetResult(result))
       : this.setState(applyUpdateResult(result));
 
   onSetEditorResult = (result) =>
     this.setState(applyEditorSetResult(result))
-
-  onAddFilter = (filterValue) =>
-    this.setState( { filter: filterValue } );
-
-  filterAssets = (collection) =>
-    collection.filter(asset =>
-      this.state.filter === '' || (
-        asset.number.toLowerCase().includes(this.state.filter.toLowerCase())
-        || asset.name.toLowerCase().includes(this.state.filter.toLowerCase())
-        || asset.product.toLowerCase().includes(this.state.filter.toLowerCase())
-        || asset.tags.join(' ').toLowerCase().includes(this.state.filter.toLowerCase())
-      )
-    );
 
   onKeyUp = (event, actionFn) => {
     clearTimeout(this.state.timeout);
@@ -142,53 +130,36 @@ class Assets extends React.Component {
   }
 
   render() {
-    let assetEditor = (
-      <AssetEditor
-        data={getEmptyAsset()}
-        cancelFn={this.handleCloseModal}
-        acceptFn={this.handleCloseModal}
-      />
-    );
-
-    const columnTitles = ['Asset', 'Print Size', 'Product', 'Tags', 'Notes'];
+    const columnTitles = ["Asset", "Order", "Print Size", "Display Size", "Product",
+    "Tags", "Related", "Notes"];
 
     const mapper = assetMapper();
     return (
-      <React.Fragment>
-        <AddModalSection clicked={() => this.handleOpenModal()} text="Add assets" />
-        <InputWithIcon
-          icon='search'
-          keyUp={(event) => this.onKeyUp(event, this.onAddFilter)}
-          placeholder="Type to filter assets"
-        />
-        <Table
-          classModules={[gptClasses]}
-          title={"Creatures"}
-          showTitle={false}
-          columnTitles={columnTitles}
-          showHeader={true}
-          rowRenderer={mapper}
-          data={this.filterAssets(this.state.hits)}
-          isError={this.state.isError}
-          isLoading={this.state.isLoading}
-          page={this.state.page}
-          onPaginatedSearch={this.onPaginatedSearch}
-        />
-
-        <Modal
-          isOpen={this.state.showModal}
-          contentLabel="Send user invitation"
-          style={{
-            content: {
-              height:"700px",
-              margin: "auto",
-              textAlign: "center",
-            }
-          }}
-        >
-          {assetEditor}
-        </Modal>
-      </React.Fragment>
+      <div className={pageClasses.Page}>
+        <div className={pageClasses.Actions}>
+          <AssetUploaderModal onParentReset={this.onReset} />
+          <InputWithIcon
+            icon='search'
+            keyUp={(event) => this.onKeyUp(event, this.onResetWithFilter)}
+            placeholder="Type to filter assets"
+            />
+        </div>
+        <div className={pageClasses.Content}>
+          <Table
+            classModules={[gptClasses]}
+            title={"Creatures"}
+            showTitle={false}
+            columnTitles={columnTitles}
+            showHeader={true}
+            rowRenderer={mapper}
+            data={this.state.hits}
+            isError={this.state.isError}
+            isLoading={this.state.isLoading}
+            page={this.state.page}
+            onPaginatedSearch={this.onPaginatedSearch}
+          />
+        </div>
+      </div>
     );
   }
 }

@@ -4,7 +4,7 @@ import { capitalize } from 'logic/shared/utility';
 
 import classes from './TextList.module.css';
 
-const textList = ({list, clicked, filtered}) =>
+const textList = ({list=[], clicked, filtered}) =>
   list.map(element =>{
     let clsList = [classes.Base];
     if (clicked) clsList.push(classes.Tag);

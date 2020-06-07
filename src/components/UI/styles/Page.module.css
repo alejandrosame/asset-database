@@ -1,0 +1,13 @@
+.Page {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+.Actions {
+  width: 100%;
+}
+
+.Content {
+  flex-grow: 1;
+}
