@@ -148,6 +148,11 @@ class PHPBackend {
     return this.instances["private"].post( url, asset );
   }
 
+  update_asset(data) {
+    let url = '/api/asset/update.php';
+    return this.instances["private"].post( url, data );
+  }
+
   update_user_admin_status(id) {
     const data = {
       "id": id

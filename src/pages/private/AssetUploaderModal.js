@@ -44,7 +44,6 @@ const readCSV = (file) => new Promise((resolve, reject) => {
           }
           indexer[index] = required_header;
         }
-
         resolve(assetLines.reduce((acc, line) => {
           if (line !== "") {
             const asset = {};
@@ -104,6 +103,67 @@ const mapAssetsTable = (assets) => {
   )
 }
 
+const intersection = (listA, listB) => {
+  return listA.filter(x => listB.includes(x));
+}
+
+const difference = (listA, listB) => {
+  return listA.filter(x => !listB.includes(x));
+}
+
+const getUpdateData = (assetCSV, assetDB) => {
+
+  const updateData = {}
+
+  if (assetCSV.displaySize.toLowerCase() !== assetDB.display_size.toLowerCase()){
+    updateData["updateDisplaySize"] = assetCSV.displaySize.toLowerCase();
+  }
+
+  if (assetCSV.printSize.toLowerCase() !== assetDB.printed_size.toLowerCase()){
+    updateData["updatePrintSize"] = assetCSV.printSize.toLowerCase();
+  }
+
+  const assetDBProduct = assetDB.products[0]?assetDB.products[0]:"";
+  if (assetCSV.product.toLowerCase() !== assetDBProduct.toLowerCase()){
+    updateData["updateProduct"] = assetCSV.product.toLowerCase();
+  }
+
+  if (assetCSV.notes.trim() !== assetDB.notes.trim()){
+    updateData["updateNotes"] = assetCSV.notes.trim();
+  }
+
+  const processedDBRelated = assetDB.related_assets.map(x => {
+    return x.number.toString();
+  } );
+  const processedCSVRelated = assetCSV.related.map(x => {
+    return x.toLowerCase();
+  } );
+  const intersectionRelated = intersection(processedDBRelated, processedCSVRelated);
+  const addRelated = difference(processedCSVRelated, intersectionRelated);
+  if (addRelated.length > 0) {
+    updateData["addRelated"] = addRelated;
+  }
+  const deleteRelated = difference(processedDBRelated, intersectionRelated);
+  if (deleteRelated.length > 0) {
+    updateData["deleteRelated"] = deleteRelated;
+  }
+
+  const processedCSVTags = assetCSV.tags.map(x => {
+    return x.toString().toLowerCase();
+  } );
+  const intersectionTags = intersection(assetDB.tags, processedCSVTags);
+  const addTags = difference(processedCSVTags, intersectionTags);
+  if (addTags.length > 0) {
+    updateData["addTags"] = addTags;
+  }
+  const deleteTags = difference(assetDB.tags, intersectionRelated);
+  if (deleteTags.length > 0) {
+    updateData["deleteTags"] = deleteTags;
+  }
+
+  return updateData;
+}
+
 const getUploadingFields = () => [
   [STATUS_FIELD, UPLOADING],
   [ERRORMSG_FIELD, ""]
@@ -121,7 +181,8 @@ const getErrorFields = (msg) => [
 
 const applyFields = (asset, fields) => update( asset, {$add: fields} );
 
-const resetState = { isOpen: false, uploading: false, assets: [], index: 0 };
+const resetState = { isOpen: false, uploading: false, finished: false,
+  assets: [], index: 0, processedTags: new Set(), processedProducts: new Set() };
 
 class AssetUploaderModal extends React.Component {
   constructor(props) {
@@ -130,14 +191,18 @@ class AssetUploaderModal extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { prevUploading, prevIndex } = prevState;
-    const { uploading, index, assets } = this.state;
+    const [ prevUploading, prevIndex ] = [ prevState.uploading, prevState.index ];
+    const { uploading, finished, index, assets } = this.state;
 
     if ( prevUploading !== uploading || prevIndex !== index ){
-      if (uploading) {
+      if (uploading && !finished ) {
         const asset = new Map(assets[index]);
         this.onUpload(asset.get(OBJ_FIELD))
-          .then(response => this.onAdvanceUploadIndex(getSuccessFields()))
+          .then(response => {
+            let msg = "";
+            if (response && "message" in response) msg = response.message;
+            this.onAdvanceUploadIndex(getSuccessFields(msg));
+          })
           .catch(error => this.onAdvanceUploadIndex(getErrorFields(error.message)));
       }
     }
@@ -172,7 +237,7 @@ class AssetUploaderModal extends React.Component {
         const mappedAssets = assets.map(asset => new Map([
           [OBJ_FIELD, asset]
         ]));
-        this.setState({ assets: mappedAssets, index: 0 })
+        this.setState({...resetState, assets: mappedAssets, isOpen: true});
       })
       .catch(errorMsg => notify.show(errorMsg, 'error'));
   }
@@ -184,13 +249,15 @@ class AssetUploaderModal extends React.Component {
 
     this.setState({
       assets: assets,
-      uploading: true
+      uploading: true,
+      finished: false
      });
   }
 
   onAdvanceUploadIndex = (fieldsPrevious) => {
-    const { index, assets, uploading } = { ...this.state };
+    const { index, assets, uploading, finished } = { ...this.state };
     let newUploading = uploading;
+    let newFinished = finished;
 
     assets[index] = applyFields(assets[index], fieldsPrevious);
 
@@ -198,12 +265,14 @@ class AssetUploaderModal extends React.Component {
       assets[index+1] = applyFields(assets[index+1], getUploadingFields());
     } else {
       newUploading = false;
+      newFinished = true;
     }
 
     this.setState({
       assets: assets,
       index: index+1,
-      uploading: newUploading
+      uploading: newUploading,
+      finished: newFinished,
     });
   }
 
@@ -211,11 +280,95 @@ class AssetUploaderModal extends React.Component {
     const backend = new Backend();
     backend.insert_asset(asset)
     .then(response => {
-      resolve();
+      const assetDB = {...asset,  products: [], tags: [], related_assets: []}
+      this.onUpdateAsset(asset, assetDB)
+        .then(response => resolve())
+        .catch(error => {
+          reject(error);
+        })
     })
     .catch(error => {
       reject(error);
     })
+  })
+
+  onAddProduct = (productName) => new Promise((resolve, reject) => {
+    if (this.state.processedProducts.has(productName)){
+      resolve();
+      return;
+    }
+
+    const processedProducts = new Set(this.state.processedProducts);
+    const backend = new Backend();
+    backend.insert_product(productName)
+      .then(response => {
+        resolve();
+      })
+      .catch(error => resolve({"product": productName}))
+      .finally(() => {
+        processedProducts.add(productName);
+        this.setState({ processedProducts: processedProducts });
+      })
+  })
+
+  onAddTag = (tagName) => new Promise((resolve, reject) => {
+    if (this.state.processedTags.has(tagName)){
+      resolve();
+      return;
+    }
+
+    const processedTags = new Set(this.state.processedTags);
+    const backend = new Backend();
+    backend.insert_tag(tagName)
+      .then(response => {
+        resolve();
+      })
+      .catch(error => resolve({"tag": tagName}))
+      .finally(() => {
+        processedTags.add(tagName);
+        this.setState({ processedTags: processedTags });
+      })
+  })
+
+  onUpdateAsset = (assetCSV, assetDB) => new Promise((resolve, reject) => {
+    const promises=[];
+    const updateData = getUpdateData(assetCSV, assetDB);
+    if (updateData === {}) {
+      console.log("No need to update: ", assetDB.number, assetDB.order);
+      resolve();
+      return;
+    }
+
+    if ("updateProduct" in updateData ) {
+      promises.push(this.onAddProduct(updateData["updateProduct"]));
+    }
+
+    if ("addTags" in updateData ) {
+      for (let tagName of updateData["addTags"]) {
+        promises.push(this.onAddTag(tagName));
+      }
+    }
+
+    Promise.all(promises)
+      .then(responses => {
+        const errors = responses.filter(el => el !== undefined);
+        if (errors.length !== 0) {
+          reject(errors);
+          return;
+        }
+
+        const backend = new Backend();
+        backend.update_asset( {
+          number: assetDB.number,
+          order: assetDB.order,
+          ...updateData } )
+          .then(response => {
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          })
+      })
   })
 
   onUpload = (assetIn) => new Promise((resolve, reject) => {
@@ -226,7 +379,7 @@ class AssetUploaderModal extends React.Component {
 
     let newRelated = [];
     if (assetIn.related !== "") {
-      newTags = splitCSVLine(assetIn.related)
+      newRelated = splitCSVLine(assetIn.related)
     }
 
     const asset = { ...assetIn, tags: newTags, related: newRelated};
@@ -237,14 +390,16 @@ class AssetUploaderModal extends React.Component {
       if(response.data.assets.length === 0){
         response = this.onInsertAsset(asset);
       } else {
-        //TODO: onUpdateAsset
+        response = this.onUpdateAsset(asset, response.data.assets[0]);
       }
-
       return response;
     })
-    .then(reponse => resolve())
+    .then(response => resolve())
     .catch(error => {
-      const msg = `Server error ${error.response.status}: ${error.response.data.message}`;
+      let msg = JSON.stringify(error);
+      if ("repsonse" in error) {
+        msg = `Server error ${error.response.status}: ${error.response.data.message}`;
+      }
       reject(new Error(msg));
     })
   });
@@ -264,7 +419,7 @@ class AssetUploaderModal extends React.Component {
 
   render() {
     const { onParentReset } = this.props;
-    const { isOpen, uploading, assets, index } = this.state;
+    const { isOpen, uploading, finished, assets, index } = this.state;
     const allowSelect = !uploading;
     const allowUpload = !uploading && assets.length !== 0 && index === 0;
 
@@ -279,7 +434,7 @@ class AssetUploaderModal extends React.Component {
       uploadStatus = <div className={[classes.Status, classes.Uploading].join(" ")}>
         {uploadStatusText}
       </div>
-    } else if (index !== 0) {
+    } else if (finished) {
       const uploadStatusText = ["Processed ", assets.length, " assets!"].join("");
       uploadStatus = <div className={[classes.Status, classes.Finished].join(" ")}>
         {uploadStatusText}
