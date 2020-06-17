@@ -15,7 +15,7 @@ const assetMapper = (productFn, tagFn, productsFilter, tagsFilter) => {
       <TextList list={[row.printed_size]} />,
       <TextList list={row.products} filtered={productsFilter} clicked={productFn} />,
       <TextList list={row.tags} filtered={tagsFilter} clicked={tagFn} />,
-      <Notes content={row.notes} />
+      <Notes content={row.notes} related={row.related_assets} />
     ]
   }
 }

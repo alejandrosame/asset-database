@@ -141,6 +141,14 @@ export const capitalize = (str) => {
   }
 }
 
+export const addFinalStop = (str) => {
+  const trimmedStr = str.trim();
+  if (trimmedStr.length === 0 || trimmedStr[trimmedStr.length-1] === '.') {
+    return trimmedStr;
+  }
+  return `${trimmedStr}.`
+}
+
 export function splitCSVLine(str) {
   return str.split(',')
     .reduce( (accum, curr) => {
