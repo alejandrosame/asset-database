@@ -134,9 +134,12 @@ export const checkEnv = (requiredEnv) => {
 }
 
 export const capitalize = (str) => {
-  return str.charAt(0).toUpperCase() + str.slice(1)
+  if (typeof str.charAt === 'function'){
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  } else {
+    return str;
+  }
 }
-
 
 export function splitCSVLine(str) {
   return str.split(',')

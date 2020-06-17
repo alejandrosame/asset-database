@@ -1,18 +1,15 @@
 .Base {
   white-space: nowrap;
+  margin: 0.5px;
 }
 
-.Tag {
-  margin: 0.5px;
+.Base:not(:last-child):after {
+  content: ", ";
 }
 
 .Tag:hover {
   cursor: pointer;
   color: red;
-}
-
-.Tag:not(:last-child):after {
-  content: ", ";
 }
 
 .TagFiltered {

@@ -337,7 +337,6 @@ class AssetUploaderModal extends React.Component {
     const promises=[];
     const updateData = getUpdateData(assetCSV, assetDB);
     if (Object.entries(updateData).length === 0) {
-      console.log("No need to update: ", assetDB.number, assetDB.order);
       resolve();
       return;
     }

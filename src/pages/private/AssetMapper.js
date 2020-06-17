@@ -17,7 +17,7 @@ const assetMapper = () => {
       <TextList list={[row.display_size]} />,
       <TextList list={row.products} />,
       <TextList list={row.tags} />,
-      <TextList list={row.related} />,
+      <TextList list={row.related_assets.map(e => `${e.number}-${e.name}`)} />,
       <Notes content={row.notes} />
     ]
   }
