@@ -132,31 +132,34 @@ const getUpdateData = (assetCSV, assetDB) => {
     updateData["updateNotes"] = assetCSV.notes.trim();
   }
 
-  const processedDBRelated = assetDB.related_assets.map(x => {
+  const DBRelated = assetDB.related_assets.map(x => {
     return x.number.toString();
   } );
-  const processedCSVRelated = assetCSV.related.map(x => {
+  const CSVRelated = assetCSV.related.map(x => {
     return x.toLowerCase();
   } );
-  const intersectionRelated = intersection(processedDBRelated, processedCSVRelated);
-  const addRelated = difference(processedCSVRelated, intersectionRelated);
+  const intersectionRelated = intersection(DBRelated, CSVRelated);
+  const addRelated = difference(CSVRelated, intersectionRelated);
   if (addRelated.length > 0) {
     updateData["addRelated"] = addRelated;
   }
-  const deleteRelated = difference(processedDBRelated, intersectionRelated);
+  const deleteRelated = difference(DBRelated, intersectionRelated);
   if (deleteRelated.length > 0) {
     updateData["deleteRelated"] = deleteRelated;
   }
 
-  const processedCSVTags = assetCSV.tags.map(x => {
+  const DBTags = assetDB.tags.map(x => {
     return x.toString().toLowerCase();
   } );
-  const intersectionTags = intersection(assetDB.tags, processedCSVTags);
-  const addTags = difference(processedCSVTags, intersectionTags);
+  const CSVTags = assetCSV.tags.map(x => {
+    return x.toString().toLowerCase();
+  } );
+  const intersectionTags = intersection(DBTags, CSVTags);
+  const addTags = difference(CSVTags, intersectionTags);
   if (addTags.length > 0) {
     updateData["addTags"] = addTags;
   }
-  const deleteTags = difference(assetDB.tags, intersectionRelated);
+  const deleteTags = difference(DBTags, intersectionTags);
   if (deleteTags.length > 0) {
     updateData["deleteTags"] = deleteTags;
   }
@@ -333,7 +336,7 @@ class AssetUploaderModal extends React.Component {
   onUpdateAsset = (assetCSV, assetDB) => new Promise((resolve, reject) => {
     const promises=[];
     const updateData = getUpdateData(assetCSV, assetDB);
-    if (updateData === {}) {
+    if (Object.entries(updateData).length === 0) {
       console.log("No need to update: ", assetDB.number, assetDB.order);
       resolve();
       return;
@@ -397,7 +400,7 @@ class AssetUploaderModal extends React.Component {
     .then(response => resolve())
     .catch(error => {
       let msg = JSON.stringify(error);
-      if ("repsonse" in error) {
+      if ("response" in error) {
         msg = `Server error ${error.response.status}: ${error.response.data.message}`;
       }
       reject(new Error(msg));
