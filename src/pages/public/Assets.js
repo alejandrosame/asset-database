@@ -64,7 +64,8 @@ class Assets extends React.Component {
       tagsFilter: new Set(),
       isError: false,
       isLoading: false,
-      refs: {}
+      refs: {},
+      highlighted: null
     };
   }
 
@@ -130,6 +131,9 @@ class Assets extends React.Component {
         behavior: 'smooth',
         block: 'start',
       });
+
+      this.setState({ highlighted: id });
+      setTimeout(() => this.setState({ highlighted: null }), 6000);
     }, 200);
   }
 
@@ -187,6 +191,7 @@ class Assets extends React.Component {
           isLoading={this.state.isLoading}
           page={this.state.page}
           onPaginatedSearch={this.onPaginatedSearch}
+          highlighted={this.state.highlighted}
         />
     </React.Fragment>
     );

@@ -10,7 +10,8 @@ const applyClass = (classModules) => (className) => {
 const table = ({
     classModules=[], title=null, columnTitles=[], showTitle=false, showHeader=false,
     rowRenderer,
-    data
+    data,
+    highlighted=null
   }) => {
 
   return (
@@ -29,6 +30,10 @@ const table = ({
             {data.map(row => (
               <tr key={rowRenderer['getId'](row)}
                   ref={rowRenderer['getRef']?rowRenderer['getRef'](row):null}
+                  className={rowRenderer['getId'](row)===highlighted
+                    ?classes.Highlighted
+                    :null
+                  }
               >
                 {rowRenderer.renderColumns(row).map((column, idx) => (
                   <td key={idx}>
