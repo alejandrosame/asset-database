@@ -75,7 +75,11 @@ class Assets extends React.Component {
   onPaginatedSearch = (e) =>
     this.fetchAssets(this.state.page + 1);
 
-  fetchAssets = (page) => {
+  onAutomaticPaginatedSearch = (callback) => {
+    this.fetchAssets(this.state.page + 1, callback);
+  }
+
+  fetchAssets = (page, callback=null) => {
     const maxFetch = 10;
     const backend = new Backend();
     this.setState({ isLoading: true });
@@ -86,7 +90,12 @@ class Assets extends React.Component {
           hits: response.data.assets,
           page: page
         };
+        if (response.data.assets.length === 0) page = page-1;
         this.onSetResult(result, page);
+
+        if (callback) {
+          callback();
+        }
       })
       .catch(error => notify.show("Something went wrong. Please, refresh page."))
   }
@@ -98,7 +107,6 @@ class Assets extends React.Component {
     page === START_PAGE
       ? this.setState(applySetResult(result))
       : this.setState(applyUpdateResult(result));
-
 
   onClickProduct = (value) => {
     const productsFilter = new Set(this.state.productsFilter);
@@ -113,10 +121,16 @@ class Assets extends React.Component {
   }
 
   onClickRelated = (id) => {
-    this.state.refs[id].current.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
+    if (this.state.refs[id] === undefined) {
+      this.onAutomaticPaginatedSearch(this.onClickRelated.bind(this, id));
+      return;
+    }
+    setTimeout(() => {
+      this.state.refs[id].current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 200);
   }
 
   onDeleteProduct = (value) => {
