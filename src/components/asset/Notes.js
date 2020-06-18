@@ -3,7 +3,7 @@ import { addFinalStop } from 'logic/shared/utility';
 
 import Button from 'components/UI/Button';
 
-const note = ({content, related, relatedFn}) => {
+const note = ({content, related=[], relatedFn=null}) => {
   return (
     <React.Fragment>
       <span key="notes">{addFinalStop(content)} </span>
