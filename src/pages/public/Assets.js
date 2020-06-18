@@ -12,19 +12,34 @@ import gptClasses from 'components/UI/styles/genericPublicTable.module.css';
 
 const START_PAGE = 1;
 
-const applyUpdateResult = (result) => (prevState) => ({
-  hits: [...prevState.hits, ...result.hits],
-  page: result.page,
-  isError: false,
-  isLoading: false,
-});
+const createRefs = (list) => {
+  return list.reduce((acc, value) => {
+    acc[value.id] = React.createRef();
+    return acc;
+  }, {});
+}
 
-const applySetResult = (result) => (prevState) => ({
-  hits: result.hits,
-  page: result.page,
-  isError: false,
-  isLoading: false,
-});
+const applyUpdateResult = (result) => (prevState) => {
+  const newRefs = createRefs(result.hits);
+  return {
+    hits: [...prevState.hits, ...result.hits],
+    refs: {...prevState.refs, ...newRefs},
+    page: result.page,
+    isError: false,
+    isLoading: false,
+  }
+};
+
+const applySetResult = (result) => (prevState) => {
+  const newRefs = createRefs(result.hits);
+  return {
+    hits: result.hits,
+    refs: newRefs,
+    page: result.page,
+    isError: false,
+    isLoading: false,
+  }
+};
 
 const applySetError = (prevState) => ({
   isError: true,
@@ -49,6 +64,7 @@ class Assets extends React.Component {
       tagsFilter: new Set(),
       isError: false,
       isLoading: false,
+      refs: {}
     };
   }
 
@@ -83,6 +99,7 @@ class Assets extends React.Component {
       ? this.setState(applySetResult(result))
       : this.setState(applyUpdateResult(result));
 
+
   onClickProduct = (value) => {
     const productsFilter = new Set(this.state.productsFilter);
     productsFilter.add(value);
@@ -93,6 +110,13 @@ class Assets extends React.Component {
     const tagsFilter = new Set(this.state.tagsFilter);
     tagsFilter.add(value);
     this.setState({ tagsFilter: tagsFilter })
+  }
+
+  onClickRelated = (id) => {
+    this.state.refs[id].current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
   }
 
   onDeleteProduct = (value) => {
@@ -125,7 +149,10 @@ class Assets extends React.Component {
     const columnTitles = ['Asset', 'Print Size', 'Product', 'Tags', 'Notes'];
 
     const mapper = assetMapper(this.onClickProduct, this.onClickTag,
-                               this.state.productsFilter, this.state.tagsFilter);
+                               this.onClickRelated,
+                               this.state.productsFilter, this.state.tagsFilter,
+                               this.state.refs
+                              );
     return (
       <React.Fragment>
         <FilterFeedback

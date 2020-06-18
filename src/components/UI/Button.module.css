@@ -21,3 +21,12 @@
 .Danger {
     color: #944317;
 }
+
+.Link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #069;
+  text-decoration: underline;
+  cursor: pointer;
+}

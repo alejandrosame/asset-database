@@ -27,7 +27,7 @@ const table = ({
           </thead>
           <tbody>
             {data.map(row => (
-              <tr key={rowRenderer['getId'](row)}>
+              <tr key={rowRenderer['getId'](row)} ref={rowRenderer['getRef'](row)}>
                 {rowRenderer.renderColumns(row).map((column, idx) => (
                   <td key={idx}>
                     {column}
