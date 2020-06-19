@@ -4,6 +4,7 @@ import { updateObject } from '../../shared/utility';
 const initialState = {
   token: null,
   userId: null,
+  username: null,
   isAdmin: null,
   error: null,
   loading: false,
@@ -14,24 +15,23 @@ const authStart = (state, action) => {
   return updateObject(state, { error: null, loading: true });
 }
 
-const authSuccess = (state, action) => {
-  return updateObject(state, {
+const authObject = (action) => {
+  return {
     token: action.idToken,
     userId: action.userId,
+    username: action.username,
     isAdmin: action.isAdmin,
     error: null,
     loading: false
-  });
+  };
+}
+
+const authSuccess = (state, action) => {
+  return updateObject(state, authObject(action));
 }
 
 const authRenew = (state, action) => {
-  return updateObject(state, {
-    token: action.idToken,
-    userId: action.userId,
-    isAdmin: action.isAdmin,
-    error: null,
-    loading: false
-  });
+  return updateObject(state, authObject(action));
 }
 
 const authFailure = (state, action) => {
@@ -42,11 +42,7 @@ const authFailure = (state, action) => {
 }
 
 const authLogout = (state, action) => {
-  return updateObject(state, {
-    token: null,
-    userId: null,
-    isAdmin: null
-  });
+  return updateObject(state, initialState);
 }
 
 const setAuthRedirectPath = (state, action) => {

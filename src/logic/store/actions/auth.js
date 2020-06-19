@@ -7,22 +7,27 @@ export const authStart = () => {
   };
 };
 
-export const authSuccess = (token, userId, isAdmin) => {
+const authObject = (type) => {
+  const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('userId');
+  const username = localStorage.getItem('username');
+  const isAdmin = localStorage.getItem('isAdmin');
+
   return {
-    type: actionTypes.AUTH_SUCCESS,
+    type: type,
     idToken: token,
     userId: userId,
+    username: username,
     isAdmin: isAdmin === null?false:JSON.parse(isAdmin)
   };
+}
+
+export const authSuccess = () => {
+  return authObject(actionTypes.AUTH_SUCCESS);
 };
 
-export const authRenew = (token, userId, isAdmin) => {
-  return {
-    type: actionTypes.AUTH_RENEW,
-    idToken: token,
-    userId: userId,
-    isAdmin: isAdmin === null?false:JSON.parse(isAdmin)
-  };
+export const authRenew = () => {
+  return authObject(actionTypes.AUTH_SUCCESS);
 };
 
 export const authFailure = (error) => {
@@ -35,6 +40,7 @@ export const authFailure = (error) => {
 export const logout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('expirationDate');
+  localStorage.removeItem('username');
   localStorage.removeItem('userId');
   localStorage.removeItem('isAdmin');
   clearTimeouts();
@@ -44,11 +50,12 @@ export const logout = () => {
 }
 
 const processAuthResponse = (response) => {
-  const { token, id, isAdmin, expiresIn } = response.data;
+  const { token, id, isAdmin, username, expiresIn } = response.data;
   const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
   localStorage.setItem('token', token);
   localStorage.setItem('expirationDate', expirationDate);
   localStorage.setItem('userId', id);
+  localStorage.setItem('username', username);
   localStorage.setItem('isAdmin', isAdmin);
 
   return { token, id, isAdmin, expiresIn };
@@ -62,11 +69,11 @@ export const login = (id, password) => {
     backend.login(id, password)
       .then(response => {
         processAuthResponse(response);
-        const { token, id, isAdmin, expiresIn } = response.data;
-        dispatch(authSuccess(token, id, isAdmin));
-        dispatch(handleLogout(expiresIn));
+        dispatch(authSuccess());
+        dispatch(handleLogout());
       })
       .catch(error => {
+        console.log(error);
         dispatch(authFailure(error.response.data.error));
       });
   };
@@ -79,10 +86,8 @@ const renewToken = () => {
     if (!shouldRenew()) return;
     backend.renew()
       .then(response => {
-        processAuthResponse(response);
-        const { token, id, isAdmin, expiresIn } = response.data;
-        dispatch(authRenew(token, id, isAdmin));
-        dispatch(handleLogout(expiresIn));
+        dispatch(authRenew());
+        dispatch(handleLogout());
       })
       .catch(error => {
         if (error.response) console.log("Failed ", error.response.data.message)
@@ -106,11 +111,8 @@ export const authCheckState = () => {
     } else {
       const expirationDate = new Date(localStorage.getItem('expirationDate'));
       if (expirationDate > new Date()) {
-        const userId = localStorage.getItem('userId');
-        const isAdmin = localStorage.getItem('isAdmin');
-        const expiresIn = (expirationDate.getTime() - new Date().getTime()) / 1000;
-        dispatch(authSuccess(token, userId, isAdmin));
-        dispatch(handleLogout(expiresIn));
+        dispatch(authSuccess());
+        dispatch(handleLogout());
       } else {
         dispatch(logout());
       }
@@ -118,7 +120,9 @@ export const authCheckState = () => {
   };
 }
 
-const handleLogout = (secondsToExpire) => {
+const handleLogout = () => {
+  const expirationDate = new Date(localStorage.getItem('expirationDate'));
+  const secondsToExpire = (expirationDate.getTime() - new Date().getTime()) / 1000;
   const renewBefore = 5; // 5 minutes before autologout
   const secondsToRenew = secondsToExpire - renewBefore * 60;
   return dispatch => {
