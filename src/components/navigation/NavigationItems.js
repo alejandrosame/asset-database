@@ -1,12 +1,13 @@
 import React from 'react';
 
 import NavigationItem from './NavigationItem';
+import NavigationItemList from './NavigationItemList';
 
 import classes from './NavigationItems.module.css';
 
-const navigationItems = (props) => {
+const navigationItems = ({isAdmin, username}) => {
   let userNav = null;
-  if (props.isAdmin){
+  if (isAdmin){
     userNav = <NavigationItem link="/private/users">Manage users</NavigationItem>;
   }
 
@@ -16,7 +17,12 @@ const navigationItems = (props) => {
       <NavigationItem link="/private/images">Manage images</NavigationItem>
       <NavigationItem link="/private/tags">Manage tags</NavigationItem>
       {userNav}
-      <NavigationItem link="/private/logout">Logout</NavigationItem>
+      <NavigationItemList title={username}
+        itemList={[
+          {text:"Logout", link:"/private/logout", exact: false}
+        ]}
+      />
+      {/* Dropdown */}
     </ul>
   );
 }
