@@ -77,8 +77,8 @@ class Users extends React.Component {
 
   render() {
     const columnTitles = ['', 'Username'];
-    const adminData = this.state.users.filter(user => user.admin);
-    const userData = this.state.users.filter(user => !user.admin);
+    const adminData = this.state.users.filter(user => user.isAdmin);
+    const userData = this.state.users.filter(user => !user.isAdmin);
 
     return (
       <div className={classes.Page}>
