@@ -154,7 +154,7 @@ class Assets extends React.Component {
 
     if (this.state.productsFilter.size > 0) {
       filteredHits = filteredHits
-        .filter(f => this.state.productsFilter.has(f.product))
+        .filter(f => intersects(f.products, this.state.productsFilter))
     }
     if (this.state.tagsFilter.size > 0) {
       filteredHits = filteredHits
