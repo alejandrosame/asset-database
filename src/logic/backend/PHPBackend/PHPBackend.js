@@ -153,6 +153,16 @@ class PHPBackend {
     return this.instances["private"].post( url, data );
   }
 
+  update_password(username, password) {
+    const data = {
+      "username": username,
+      "password": password
+    }
+
+    let url = '/api/user/changePassword.php';
+    return this.instances["private"].post( url, data );
+  }
+
   update_user_admin_status(id) {
     const data = {
       "id": id

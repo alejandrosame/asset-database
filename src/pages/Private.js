@@ -8,6 +8,7 @@ import Layout from 'pages/Layout';
 import Assets from 'pages/private/Assets';
 import Images from 'pages/private/Images';
 import Logout from 'pages/private/Logout';
+import PasswordChange from 'pages/private/PasswordChange';
 import Tags from 'pages/private/Tags';
 import Users from 'pages/private/Users';
 
@@ -30,6 +31,9 @@ class Private extends React.Component {
       <Layout {...this.props}>
         <Switch>
           <Route path={`${this.props.match.path}/logout`} exact component={Logout} />
+          <Route path={`${this.props.match.path}/password-change`} exact
+            render={() =><PasswordChange isAuthenticated={this.props.isAuthenticated}/>}
+          />
           <Route path={`${this.props.match.path}/images`} exact
             render={() => <Images isAuthenticated={this.props.isAuthenticated}/>}
           />

@@ -19,6 +19,7 @@ const navigationItems = ({isAdmin, username}) => {
       {userNav}
       <NavigationItemList title={username}
         itemList={[
+          {text:"Change password", link:"/private/password-change", exact: false},
           {text:"Logout", link:"/private/logout", exact: false}
         ]}
       />
