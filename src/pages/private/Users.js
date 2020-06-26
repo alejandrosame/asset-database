@@ -57,9 +57,16 @@ class Users extends React.Component {
       ));
   }
 
-  onDeleteUser = (id) => {
+  onDeleteUser = (row) => {
+    const shouldDelete = window.confirm(
+      `Delete account for user '${row.username}'?`
+    );
+    if (!shouldDelete) {
+      return;
+    }
+
     const backend = new Backend();
-    backend.delete_user(id)
+    backend.delete_user(row.id)
       .then(response => this.fetchData())
       .catch(error => notify.show(
         "Could not delete user data: " + getErrorMessage(error),
@@ -68,21 +75,21 @@ class Users extends React.Component {
   }
 
   rowRenderer = (admin) => {
-    const renderActions = (id, username) => {
+    const renderActions = (row) => {
       const text = admin?"Revoke admin rights":"Grant admin rights";
 
       return (
         <React.Fragment>
           <Button
             buttonType="Danger"
-            clicked={() => this.onUpdateUserAdminStatus(id)}
+            clicked={() => this.onUpdateUserAdminStatus(row.id)}
           >
             {text}
           </Button>
           <Button
             buttonType="Danger"
             clicked={() => this.setState({
-              usernamePasswordChangeModal: username,
+              usernamePasswordChangeModal: row.username,
               showPasswordChangeModal: true
             })}
           >
@@ -90,7 +97,7 @@ class Users extends React.Component {
           </Button>
           <Button
             buttonType="Danger"
-            clicked={() => this.onDeleteUser(id)}
+            clicked={() => this.onDeleteUser(row)}
           >
             Delete account
           </Button>
@@ -100,7 +107,7 @@ class Users extends React.Component {
 
     return {
       getId: (row) => row.id,
-      renderColumns: (row) => [renderActions(row.id, row.username), row.username]
+      renderColumns: (row) => [renderActions(row), row.username]
     }
   }
 
