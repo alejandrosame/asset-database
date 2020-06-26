@@ -82,6 +82,7 @@ const renewToken = () => {
     if (!shouldRenew()) return;
     backend.renew()
       .then(response => {
+        processAuthResponse(response);
         dispatch(authRenew());
         dispatch(handleAutoLogout());
       })
