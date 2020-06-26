@@ -89,8 +89,14 @@ class Tags extends React.Component {
 
   onAddTag = (collection) => (tagValue) => {
     this.setState({ isLoading: true });
-    const backend = new Backend();
 
+    const found = this.state[collection].filter(tag => tag.value === tagValue);
+    if (found.length > 0){
+      this.setState({ isLoading: false });
+      return;
+    }
+
+    const backend = new Backend();
     let request;
     if (collection === "tags") {
       request = backend.insert_tag(tagValue);
@@ -102,7 +108,7 @@ class Tags extends React.Component {
       .then( response => {
         const newCollection = update(this.state[collection], {
           $push: [{
-            id: response.id,
+            id: response.data.id,
             value: tagValue
           }]}
         );
