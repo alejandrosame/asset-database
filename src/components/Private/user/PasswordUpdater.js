@@ -10,7 +10,7 @@ import Input from 'components/UI/Input';
 import classes from './PasswordUpdater.module.css';
 
 
-const PasswordUpdater = ( {username} ) => {
+const PasswordUpdater = ( {username, callback} ) => {
   const [controls, setControls] = useState(createControls([
     {id: 'password', type: 'password', label:'New password'},
     {id: 'confirm-password', type: 'password', label:'Confirm new password'}
@@ -53,6 +53,7 @@ const PasswordUpdater = ( {username} ) => {
         }
         notify.show(msg.join(" "), 'error');
       })
+      .finally(() => callback());
   }
 
   const formElementsArray = [];

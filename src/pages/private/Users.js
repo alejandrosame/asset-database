@@ -8,6 +8,7 @@ import Backend from 'logic/backend/Backend';
 import Button from 'components/UI/Button';
 import Table from 'components/UI/Table';
 
+import ChangePasswordModal from './UsersPasswordChangeModal';
 import CreateUserModal from './UsersCreateModal';
 import withAuth from 'logic/hoc/withAuth';
 
@@ -18,14 +19,22 @@ class Users extends React.Component {
   constructor(props){
     super(props);
 
-    this.state = {};
-    this.state['users'] = [];
+    this.state = this.resetState();
 
     this.fetchData = this.fetchData.bind(this);
     this.fetchData();
   }
 
+  resetState(){
+    return {
+      users: [],
+      showPasswordChangeModal: false,
+      usernamePasswordChangeModal: ""
+    }
+  }
+
   fetchData(){
+    this.setState(this.resetState());
     const backend = new Backend();
     backend.get_users()
       .then(response => this.setState({users: response.data.users}))
@@ -56,7 +65,7 @@ class Users extends React.Component {
   }
 
   rowRenderer = (admin) => {
-    const renderActions = (id) => {
+    const renderActions = (id, username) => {
       const text = admin?"Revoke admin rights":"Grant admin rights";
 
       return (
@@ -66,6 +75,15 @@ class Users extends React.Component {
             clicked={() => this.onUpdateUserAdminStatus(id)}
           >
             {text}
+          </Button>
+          <Button
+            buttonType="Danger"
+            clicked={() => this.setState({
+              usernamePasswordChangeModal: username,
+              showPasswordChangeModal: true
+            })}
+          >
+            Change password
           </Button>
           <Button
             buttonType="Danger"
@@ -79,7 +97,7 @@ class Users extends React.Component {
 
     return {
       getId: (row) => row.id,
-      renderColumns: (row) => [renderActions(row.id), row.username]
+      renderColumns: (row) => [renderActions(row.id, row.username), row.username]
     }
   }
 
@@ -92,6 +110,10 @@ class Users extends React.Component {
       <div className={classes.Page}>
         <div className={classes.Actions}>
           <CreateUserModal onParentFetch={this.fetchData} />
+          <ChangePasswordModal onParentFetch={this.fetchData}
+            username={this.state.usernamePasswordChangeModal}
+            showModal={this.state.showPasswordChangeModal}
+          />
         </div>
         <div className={classes.Content}>
           <Table
