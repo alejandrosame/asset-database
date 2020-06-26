@@ -7,6 +7,15 @@ import classes from './ImageEditor.module.css';
 
 import { capitalize } from 'logic/shared/utility';
 
+const confirmDeletion = (image, onDelete) => {
+  const shouldDelete = window.confirm(
+    `Delete '${image.number} ${image.name} (${image.side})'?`
+  );
+  if (shouldDelete) {
+    onDelete(image.id);
+  }
+}
+
 const imageEditor = ({ baseImageURL, images, label, onKeyUpSearch, onDelete }) =>
   <div className={classes.ImageEditor}>
     <h2>{label}</h2>
@@ -14,7 +23,7 @@ const imageEditor = ({ baseImageURL, images, label, onKeyUpSearch, onDelete }) =
       <InputWithIcon
         icon='search'
         keyUp={onKeyUpSearch}
-        placeholder="Type to filter tags"
+        placeholder="Type to filter images"
       />
     </div>
     <div className={classes.Editor}>
@@ -34,7 +43,7 @@ const imageEditor = ({ baseImageURL, images, label, onKeyUpSearch, onDelete }) =
               <td>
                 <Button
                   buttonType="Danger"
-                  clicked={() => onDelete(image.id)}
+                  clicked={() => confirmDeletion(image, onDelete)}
                   >
                   Delete
                 </Button>
