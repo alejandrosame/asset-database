@@ -5,6 +5,12 @@ import Tag from 'components/UI/Tag';
 
 import classes from './TagEditor.module.css';
 
+const confirmDeletion = (value, id, onDelete) => {
+  const shouldDelete = window.confirm(`Delete '${value}'?`);
+  if (shouldDelete) {
+    onDelete(id);
+  }
+}
 
 const tagEditor = ({ tags, label, onKeyUpAdd, onKeyUpSearch, onDelete }) =>
   <div className={classes.TagEditor}>
@@ -28,7 +34,7 @@ const tagEditor = ({ tags, label, onKeyUpAdd, onKeyUpSearch, onDelete }) =>
           return (
             <Tag
               key={tag.id}
-              onDelete={() => onDelete(tag.id)}
+              onDelete={() => confirmDeletion(tag.value, tag.id, onDelete) }
             >
               {tag.value}
             </Tag>
