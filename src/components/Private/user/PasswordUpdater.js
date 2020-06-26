@@ -12,8 +12,8 @@ import classes from './PasswordUpdater.module.css';
 
 const PasswordUpdater = ( {username} ) => {
   const [controls, setControls] = useState(createControls([
-    {id: 'password', type: 'password'},
-    {id: 'confirm-password', type: 'password'}
+    {id: 'password', type: 'password', label:'New password'},
+    {id: 'confirm-password', type: 'password', label:'Confirm new password'}
   ]));
 
   const inputChangedHandler = (event, controlName) => {
@@ -67,6 +67,7 @@ const PasswordUpdater = ( {username} ) => {
       key={formElement.id}
       elementType={formElement.config.elementType}
       elementConfig={formElement.config.elementConfig}
+      label={formElement.config.label}
       value={formElement.config.value}
       invalid={!formElement.config.valid}
       shouldValidate={formElement.config.validation}
@@ -80,7 +81,7 @@ const PasswordUpdater = ( {username} ) => {
     <div className={classes.PasswordUpdater}>
       <form onSubmit={submitHandler}>
         {form}
-        <Button buttonType="Success">Update password</Button>
+        <Button buttonType="Success">Change password</Button>
       </form>
     </div>
   );

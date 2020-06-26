@@ -116,6 +116,9 @@ const createControl = (control) => {
       }
       break;
   }
+  if ("label" in control) {
+    content["label"] = control.label;
+  }
   return content;
 }
 
