@@ -34,10 +34,13 @@ class Users extends React.Component {
   }
 
   fetchData(){
-    this.setState(this.resetState());
+    const newState = this.resetState();
     const backend = new Backend();
     backend.get_users()
-      .then(response => this.setState({users: response.data.users}))
+      .then(response => {
+        newState["users"] = response.data.users;
+        this.setState(newState);
+      })
       .catch(error => notify.show(
         "Could not fetch user data: " + getErrorMessage(error),
         'error'
