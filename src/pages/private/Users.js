@@ -1,6 +1,8 @@
 import React from 'react';
 import {notify} from 'react-notify-toast';
 
+import { getErrorMessage } from 'logic/shared/utility';
+
 import Backend from 'logic/backend/Backend';
 
 import Button from 'components/UI/Button';
@@ -11,7 +13,6 @@ import withAuth from 'logic/hoc/withAuth';
 
 import classes from './Users.module.css';
 import gptClasses from 'components/UI/styles/genericPrivateTable.module.css';
-
 
 class Users extends React.Component {
   constructor(props){
@@ -28,23 +29,30 @@ class Users extends React.Component {
     const backend = new Backend();
     backend.get_users()
       .then(response => this.setState({users: response.data.users}))
-      .catch(error => notify.show("Could not fetch user data: " + error, 'error'));
+      .catch(error => notify.show(
+        "Could not fetch user data: " + getErrorMessage(error),
+        'error'
+      ));
   }
 
   onUpdateUserAdminStatus = (id) => {
     const backend = new Backend();
     backend.update_user_admin_status(id)
       .then(response => this.fetchData())
-      .catch(error =>
-        notify.show("Could not update user admin status: " + error, 'error')
-      );
+      .catch(error =>  notify.show(
+        "Could not update user admin status: " + getErrorMessage(error),
+        'error'
+      ));
   }
 
   onDeleteUser = (id) => {
     const backend = new Backend();
     backend.delete_user(id)
       .then(response => this.fetchData())
-      .catch(error => notify.show("Could not delete user data: " + error, 'error'));
+      .catch(error => notify.show(
+        "Could not delete user data: " + getErrorMessage(error),
+        'error'
+      ));
   }
 
   rowRenderer = (admin) => {

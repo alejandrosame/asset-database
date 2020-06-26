@@ -168,3 +168,8 @@ export function splitCSVLine(str) {
     ).soFar
     .map(entry => entry.split('"').join('').trim());
 }
+
+export const getErrorMessage = (error) => {
+  if ("message" in error.response.data) return error.response.data.message;
+  return error;
+}
