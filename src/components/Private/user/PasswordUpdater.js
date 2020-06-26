@@ -10,7 +10,7 @@ import Input from 'components/UI/Input';
 import classes from './PasswordUpdater.module.css';
 
 
-const PasswordUpdater = ( {username, callback} ) => {
+const PasswordUpdater = ( {username, callback=null} ) => {
   const [controls, setControls] = useState(createControls([
     {id: 'password', type: 'password', label:'New password'},
     {id: 'confirm-password', type: 'password', label:'Confirm new password'}
@@ -34,11 +34,18 @@ const PasswordUpdater = ( {username, callback} ) => {
   const submitHandler = (event) => {
     event.preventDefault();
 
-    if (controls['password'].value !== controls['confirm-password'].value) {
-      const msg = "Password mismatched. Please type them again.";
+    if (!controls['password'].valid) {
+      const msg = "Password is invalid.";
       notify.show(msg, 'error');
       return;
     }
+
+    if (controls['password'].value !== controls['confirm-password'].value) {
+      const msg = "Passwords are mismatched. Please, type them again.";
+      notify.show(msg, 'error');
+      return;
+    }
+
 
     const b = new Backend();
     b.update_password(username, controls['password'].value)
@@ -53,7 +60,7 @@ const PasswordUpdater = ( {username, callback} ) => {
         }
         notify.show(msg.join(" "), 'error');
       })
-      .finally(() => callback());
+      .finally(() => callback!==null?callback():null);
   }
 
   const formElementsArray = [];
