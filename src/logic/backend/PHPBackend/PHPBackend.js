@@ -153,6 +153,11 @@ class PHPBackend {
     return this.instances["private"].post( url, data );
   }
 
+  export_assets() {
+    let url = '/api/asset/export.php';
+    return this.instances["private"].post( url, null );
+  }
+
   update_password(username, password) {
     const data = {
       "username": username,

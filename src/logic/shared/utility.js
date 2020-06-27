@@ -170,6 +170,10 @@ export function splitCSVLine(str) {
 }
 
 export const getErrorMessage = (error) => {
-  if ("message" in error.response.data) return error.response.data.message;
-  return error;
+  try {
+    return error.response.data.message;
+
+  } catch (e) {
+    return `${error.name} - ${error.message}`;
+  }
 }

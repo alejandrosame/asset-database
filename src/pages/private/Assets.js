@@ -8,6 +8,7 @@ import Table from 'components/UI/AdvancedTable';
 import InputWithIcon from 'components/UI/InputWithIcon';
 
 import AssetUploaderModal from './AssetUploaderModal';
+import AssetExporterModal from './AssetExporterModal';
 
 import withAuth from 'logic/hoc/withAuth';
 import Backend from 'logic/backend/Backend';
@@ -140,6 +141,7 @@ class Assets extends React.Component {
       <div className={pageClasses.Page}>
         <div className={pageClasses.Actions}>
           <AssetUploaderModal onParentReset={this.onReset} />
+          <AssetExporterModal />
           <InputWithIcon
             icon='search'
             keyUp={(event) => this.onKeyUp(event, this.onResetWithFilter)}

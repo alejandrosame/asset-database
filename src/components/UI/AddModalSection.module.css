@@ -1,5 +1,9 @@
 .AddModalSection {
   width: 100%;
   background-color: #B9F1AE;
+}
+
+.AddModalSection:hover {
+  background-color: #a6d89c;
   cursor: pointer;
 }
