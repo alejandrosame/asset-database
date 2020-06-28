@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
+import { RemoveScrollBar } from 'react-remove-scroll-bar';
 import { MdClose } from 'react-icons/md';
 
 import classes from './Viz.module.css';
@@ -73,6 +74,7 @@ class Viz extends React.Component {
               }
           }}
         >
+          <RemoveScrollBar />
           <div className={classes.TopBar}>
             <strong className={classes.AssetName} >{placeholderName}</strong>
             <MdClose className={classes.CloseModal} onClick={this.handleCloseModal} />
