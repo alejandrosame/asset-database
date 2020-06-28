@@ -3,9 +3,11 @@
 }
 
 .Actions {
+  height: 4vh;
   width: 100%;
   display: flex;
   flex-flow: row;
+  margin-bottom: 2px;
 }
 
 .Actions div {
