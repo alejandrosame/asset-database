@@ -1,7 +1,5 @@
 .Page {
   height: 100%;
-  display: flex;
-  flex-flow: column;
 }
 
 .Actions {
@@ -17,5 +15,6 @@
 }
 
 .Content {
-  flex-grow: 1;
+  height: 89vh;
+  overflow-y: auto;
 }
