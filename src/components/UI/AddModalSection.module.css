@@ -1,6 +1,8 @@
 .AddModalSection {
   width: 100%;
+  justify-content: center;
   background-color: #B9F1AE;
+  border: solid 1px #a6d89c;
 }
 
 .AddModalSection:hover {

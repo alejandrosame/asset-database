@@ -140,13 +140,19 @@ class Assets extends React.Component {
     return (
       <div className={pageClasses.Page}>
         <div className={pageClasses.Actions}>
-          <AssetUploaderModal onParentReset={this.onReset} />
-          <AssetExporterModal />
-          <InputWithIcon
-            icon='search'
-            keyUp={(event) => this.onKeyUp(event, this.onResetWithFilter)}
-            placeholder="Type to filter assets"
+          <div>
+            <InputWithIcon
+              icon='search'
+              keyUp={(event) => this.onKeyUp(event, this.onResetWithFilter)}
+              placeholder="Type to filter assets"
             />
+          </div>
+          <div>
+            <AssetUploaderModal onParentReset={this.onReset} />
+          </div>
+          <div>
+            <AssetExporterModal />
+          </div>
         </div>
         <div className={pageClasses.Content}>
           <Table
