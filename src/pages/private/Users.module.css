@@ -15,3 +15,7 @@
 .Table th:first-child {
   width: 480px;
 }
+
+.Table {
+  height: calc(50% - 15px);
+}

@@ -1,6 +1,5 @@
 .Table {
   width: 90%;
-  height: calc(50% - 15px);
   margin: auto;
   display: flex;
   flex-direction: column;
