@@ -129,6 +129,7 @@ class Users extends React.Component {
           <Table
             classModules={[classes, gptClasses]}
             title={"Admins"}
+            showTitle={true}
             columnTitles={columnTitles}
             showHeader={true}
             rowRenderer={this.rowRenderer(true)}
@@ -137,6 +138,7 @@ class Users extends React.Component {
           <Table
             classModules={[classes, gptClasses]}
             title={"Users"}
+            showTitle={true}
             columnTitles={columnTitles}
             showHeader={true}
             rowRenderer={this.rowRenderer()}
