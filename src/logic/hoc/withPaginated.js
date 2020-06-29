@@ -1,13 +1,11 @@
 import React from 'react';
 
 const withPaginated = (conditionFn) => (Component) => (props) =>
-  <div>
-    <Component {...props} />
-
-    <div className="interactions">
-      {
-        conditionFn(props) &&
-        <div>
+  {
+    let showTryAgain = null;
+    if (conditionFn(props)) {
+      showTryAgain = (
+        <div className="interactions">
           <div>
             Something went wrong...
           </div>
@@ -18,8 +16,15 @@ const withPaginated = (conditionFn) => (Component) => (props) =>
             Try Again
           </button>
         </div>
-      }
-    </div>
-  </div>
+      )
+    }
+
+    return (
+      <React.Fragment>
+        <Component {...props} />
+        {showTryAgain}
+      </React.Fragment>
+    );
+  }
 
 export default withPaginated;

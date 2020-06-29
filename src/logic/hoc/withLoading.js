@@ -1,12 +1,17 @@
 import React from 'react';
 
-const withLoading = (conditionFn) => (Component) => (props) =>
-  <div>
-    <Component {...props} />
+const withLoading = (conditionFn) => (Component) => (props) => {
+  let showLoading = null;
+  if (conditionFn(props)){
+    showLoading = <span>Loading...</span>
+  }
 
-    <div className="interactions">
-      {conditionFn(props) && <span>Loading...</span>}
-    </div>
-  </div>
+  return (
+    <React.Fragment>
+      <Component {...props} />
+      { showLoading }
+    </React.Fragment>
+  );
+}
 
 export default withLoading;
