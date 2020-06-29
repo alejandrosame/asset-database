@@ -8,6 +8,10 @@
   width: 100%;
 }
 
+.Hidden {
+  visibility: hidden;
+}
+
 .Content {
   flex-grow: 1;
 }

@@ -8,6 +8,7 @@ import Table from 'components/UI/AdvancedTable';
 
 import Backend from 'logic/backend/Backend';
 
+import pageClasses from 'components/UI/styles/Page.module.css';
 import gptClasses from 'components/UI/styles/genericPublicTable.module.css';
 
 const START_PAGE = 1;
@@ -173,26 +174,34 @@ class Assets extends React.Component {
                               );
     return (
       <React.Fragment>
-        <FilterFeedback
-          productsFilter={this.state.productsFilter}
-          tagsFilter={this.state.tagsFilter}
-          onDeleteProduct={this.onDeleteProduct}
-          onDeleteTag={this.onDeleteTag}
-        />
-        <Table
-          classModules={[gptClasses]}
-          title={"Creatures"}
-          showTitle={false}
-          columnTitles={columnTitles}
-          showHeader={false}
-          rowRenderer={mapper}
-          data={this.filterHits(this.state.hits)}
-          isError={this.state.isError}
-          isLoading={this.state.isLoading}
-          page={this.state.page}
-          onPaginatedSearch={this.onPaginatedSearch}
-          highlighted={this.state.highlighted}
-        />
+        <div className={pageClasses.Page}>
+          <div className={pageClasses.Actions}>
+            <div>
+              <FilterFeedback
+                productsFilter={this.state.productsFilter}
+                tagsFilter={this.state.tagsFilter}
+                onDeleteProduct={this.onDeleteProduct}
+                onDeleteTag={this.onDeleteTag}
+              />
+            </div>
+          </div>
+          <div className={pageClasses.Content}>
+              <Table
+                classModules={[gptClasses]}
+                title={"Creatures"}
+                showTitle={false}
+                columnTitles={columnTitles}
+                showHeader={false}
+                rowRenderer={mapper}
+                data={this.filterHits(this.state.hits)}
+                isError={this.state.isError}
+                isLoading={this.state.isLoading}
+                page={this.state.page}
+                onPaginatedSearch={this.onPaginatedSearch}
+                highlighted={this.state.highlighted}
+              />
+          </div>
+        </div>
     </React.Fragment>
     );
   }
