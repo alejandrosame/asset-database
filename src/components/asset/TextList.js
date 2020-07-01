@@ -7,13 +7,14 @@ import classes from './TextList.module.css';
 const textList = ({list=[], clicked, filtered}) =>
   list.map(element =>{
     let clsList = [classes.Base];
+    const isElementFiltered = filtered && filtered.has(element);
     if (clicked) clsList.push(classes.Tag);
-    if (filtered && filtered.has(element)) clsList.push(classes.TagFiltered);
+    if (isElementFiltered) clsList.push(classes.TagFiltered);
 
     return (
       <span className={clsList.join(' ')}
             key={element}
-            onClick={() => clicked ? clicked(element) : null}
+            onClick={() => clicked && !isElementFiltered ? clicked(element) : null}
       >
         {capitalize(element)}
       </span>

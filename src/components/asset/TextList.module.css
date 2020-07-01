@@ -15,3 +15,8 @@
 .TagFiltered {
   color: red;
 }
+
+.TagFiltered:hover {
+  cursor: default;
+  color: red;
+}

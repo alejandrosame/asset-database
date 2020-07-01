@@ -3,6 +3,7 @@ import {notify} from 'react-notify-toast';
 
 import assetMapper from './AssetMapper';
 import FilterFeedback from './FilterFeedback';
+import SelectFilterTypeModal from './SelectFilterTypeModal';
 
 import Table from 'components/UI/AdvancedTable';
 
@@ -54,6 +55,13 @@ const intersects = (array, set) => {
   return false;
 }
 
+const doesNotIntersect = (array, set) => {
+  for (let val of array){
+    if (set.has(val)) return false;
+  }
+  return true;
+}
+
 class Assets extends React.Component {
   constructor(props) {
     super(props);
@@ -61,12 +69,19 @@ class Assets extends React.Component {
     this.state = {
       hits: [],
       page: null,
-      productsFilter: new Set(),
-      tagsFilter: new Set(),
+      productsShowFilter: new Set(),
+      tagsShowFilter: new Set(),
+      productsHideFilter: new Set(),
+      tagsHideFilter: new Set(),
       isError: false,
       isLoading: false,
       refs: {},
-      highlighted: null
+      highlighted: null,
+      isModalOpen: false,
+      onShowTagModal: null,
+      onHideTagModal: null,
+      clickedTagModal: null,
+      clickedTagTypeModal: null
     };
   }
 
@@ -111,15 +126,47 @@ class Assets extends React.Component {
       : this.setState(applyUpdateResult(result));
 
   onClickProduct = (value) => {
-    const productsFilter = new Set(this.state.productsFilter);
-    productsFilter.add(value);
-    this.setState({ productsFilter: productsFilter })
+    this.setState({
+      isModalOpen: true,
+      onShowTagModal: this.onClickShowProduct,
+      onHideTagModal: this.onClickHideProduct,
+      clickedTagModal: value,
+      clickedTagTypeModal: "product"
+    });
   }
 
   onClickTag = (value) => {
-    const tagsFilter = new Set(this.state.tagsFilter);
-    tagsFilter.add(value);
-    this.setState({ tagsFilter: tagsFilter })
+    this.setState({
+      isModalOpen: true,
+      onShowTagModal: this.onClickShowTag,
+      onHideTagModal: this.onClickHideTag,
+      clickedTagModal: value,
+      clickedTagTypeModal: "tag"
+    });
+  }
+
+  onClickShowProduct = (value) => {
+    const productsShowFilter = new Set(this.state.productsShowFilter);
+    productsShowFilter.add(value);
+    this.setState({ isModalOpen: false, productsShowFilter: productsShowFilter })
+  }
+
+  onClickShowTag = (value) => {
+    const tagsShowFilter = new Set(this.state.tagsShowFilter);
+    tagsShowFilter.add(value);
+    this.setState({ isModalOpen: false, tagsShowFilter: tagsShowFilter })
+  }
+
+  onClickHideProduct = (value) => {
+    const productsHideFilter = new Set(this.state.productsHideFilter);
+    productsHideFilter.add(value);
+    this.setState({ isModalOpen: false, productsHideFilter: productsHideFilter })
+  }
+
+  onClickHideTag = (value) => {
+    const tagsHideFilter = new Set(this.state.tagsHideFilter);
+    tagsHideFilter.add(value);
+    this.setState({ isModalOpen: false, tagsHideFilter: tagsHideFilter })
   }
 
   onClickRelated = (id) => {
@@ -138,28 +185,57 @@ class Assets extends React.Component {
     }, 200);
   }
 
-  onDeleteProduct = (value) => {
-    const productsFilter = new Set(this.state.productsFilter);
-    productsFilter.delete(value);
-    this.setState({ productsFilter: productsFilter })
+  onDeleteShowProduct = (value) => {
+    const productsShowFilter = new Set(this.state.productsShowFilter);
+    productsShowFilter.delete(value);
+    this.setState({ productsShowFilter: productsShowFilter })
   }
 
-  onDeleteTag = (value) => {
-    const tagsFilter = new Set(this.state.tagsFilter);
-    tagsFilter.delete(value);
-    this.setState({ tagsFilter: tagsFilter })
+  onDeleteShowTag = (value) => {
+    const tagsShowFilter = new Set(this.state.tagsShowFilter);
+    tagsShowFilter.delete(value);
+    this.setState({ tagsShowFilter: tagsShowFilter })
+  }
+
+  onDeleteHideProduct = (value) => {
+    const productsHideFilter = new Set(this.state.productsHideFilter);
+    productsHideFilter.delete(value);
+    this.setState({ productsHideFilter: productsHideFilter })
+  }
+
+  onDeletehideTag = (value) => {
+    const tagsHideFilter = new Set(this.state.tagsHideFilter);
+    tagsHideFilter.delete(value);
+    this.setState({ tagsHideFilter: tagsHideFilter })
+  }
+
+  onOpenModal = () => {
+    this.setState({ isModalOpen: true })
+  }
+
+  onCloseModal = () => {
+    this.setState({ isModalOpen: false })
   }
 
   filterHits = (hits) => {
     let filteredHits = hits;
 
-    if (this.state.productsFilter.size > 0) {
+    if (this.state.productsHideFilter.size > 0) {
       filteredHits = filteredHits
-        .filter(f => intersects(f.products, this.state.productsFilter))
+        .filter(f => doesNotIntersect(f.products, this.state.productsHideFilter))
     }
-    if (this.state.tagsFilter.size > 0) {
+    if (this.state.tagsHideFilter.size > 0) {
       filteredHits = filteredHits
-        .filter(f => intersects(f.tags, this.state.tagsFilter))
+        .filter(f => doesNotIntersect(f.tags, this.state.tagsHideFilter))
+    }
+
+    if (this.state.productsShowFilter.size > 0) {
+      filteredHits = filteredHits
+        .filter(f => intersects(f.products, this.state.productsShowFilter))
+    }
+    if (this.state.tagsShowFilter.size > 0) {
+      filteredHits = filteredHits
+        .filter(f => intersects(f.tags, this.state.tagsShowFilter))
     }
     return filteredHits;
   }
@@ -169,23 +245,36 @@ class Assets extends React.Component {
 
     const mapper = assetMapper(this.onClickProduct, this.onClickTag,
                                this.onClickRelated,
-                               this.state.productsFilter, this.state.tagsFilter,
+                               this.state.productsShowFilter, this.state.tagsShowFilter,
                                this.state.refs
                               );
+
     return (
       <React.Fragment>
         <div className={pageClasses.Page}>
           <div className={pageClasses.Actions}>
             <div>
               <FilterFeedback
-                productsFilter={this.state.productsFilter}
-                tagsFilter={this.state.tagsFilter}
-                onDeleteProduct={this.onDeleteProduct}
-                onDeleteTag={this.onDeleteTag}
+                productsShowFilter={this.state.productsShowFilter}
+                tagsShowFilter={this.state.tagsShowFilter}
+                productsHideFilter={this.state.productsHideFilter}
+                tagsHideFilter={this.state.tagsHideFilter}
+                onDeleteShowProduct={this.onDeleteShowProduct}
+                onDeleteShowTag={this.onDeleteShowTag}
+                onDeleteHideProduct={this.onDeleteHideProduct}
+                onDeleteHideTag={this.onDeleteHideTag}
               />
             </div>
           </div>
           <div className={pageClasses.Content}>
+              <SelectFilterTypeModal
+                showModal={this.state.isModalOpen}
+                onCloseModal={this.onCloseModal}
+                tag={this.state.clickedTagModal}
+                tagType={this.state.clickedTagTypeModal}
+                onShow={this.state.onShowTagModal}
+                onHide={this.state.onHideTagModal}
+              />
               <Table
                 classModules={[gptClasses]}
                 title={"Creatures"}

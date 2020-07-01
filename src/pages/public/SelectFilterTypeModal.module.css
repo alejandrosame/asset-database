@@ -1,0 +1,9 @@
+.CloseModal {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+}
+
+.CloseModal:hover {
+  cursor: pointer;
+}
