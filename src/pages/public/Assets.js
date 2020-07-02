@@ -101,7 +101,13 @@ class Assets extends React.Component {
     const backend = new Backend();
     this.setState({ isLoading: true });
 
-    backend.get_assets(maxFetch, page)
+    backend.get_assets(
+      maxFetch, page,
+      [...this.state.productsShowFilter].join(','),
+      [...this.state.productsHideFilter].join(','),
+      [...this.state.tagsShowFilter].join(','),
+      [...this.state.tagsHideFilter].join(',')
+    )
       .then(response => {
         const result = {
           hits: response.data.assets,
@@ -148,25 +154,37 @@ class Assets extends React.Component {
   onClickShowProduct = (value) => {
     const productsShowFilter = new Set(this.state.productsShowFilter);
     productsShowFilter.add(value);
-    this.setState({ isModalOpen: false, productsShowFilter: productsShowFilter })
+    this.setState({
+      page: 1,
+      isModalOpen: false,
+      productsShowFilter: productsShowFilter })
   }
 
   onClickShowTag = (value) => {
     const tagsShowFilter = new Set(this.state.tagsShowFilter);
     tagsShowFilter.add(value);
-    this.setState({ isModalOpen: false, tagsShowFilter: tagsShowFilter })
+    this.setState({
+      page: 1,
+      isModalOpen: false,
+      tagsShowFilter: tagsShowFilter })
   }
 
   onClickHideProduct = (value) => {
     const productsHideFilter = new Set(this.state.productsHideFilter);
     productsHideFilter.add(value);
-    this.setState({ isModalOpen: false, productsHideFilter: productsHideFilter })
+    this.setState({
+      page: 1,
+      isModalOpen: false,
+      productsHideFilter: productsHideFilter })
   }
 
   onClickHideTag = (value) => {
     const tagsHideFilter = new Set(this.state.tagsHideFilter);
     tagsHideFilter.add(value);
-    this.setState({ isModalOpen: false, tagsHideFilter: tagsHideFilter })
+    this.setState({
+      page: 1,
+      isModalOpen: false,
+      tagsHideFilter: tagsHideFilter })
   }
 
   onClickRelated = (id) => {
@@ -217,29 +235,6 @@ class Assets extends React.Component {
     this.setState({ isModalOpen: false })
   }
 
-  filterHits = (hits) => {
-    let filteredHits = hits;
-
-    if (this.state.productsHideFilter.size > 0) {
-      filteredHits = filteredHits
-        .filter(f => doesNotIntersect(f.products, this.state.productsHideFilter))
-    }
-    if (this.state.tagsHideFilter.size > 0) {
-      filteredHits = filteredHits
-        .filter(f => doesNotIntersect(f.tags, this.state.tagsHideFilter))
-    }
-
-    if (this.state.productsShowFilter.size > 0) {
-      filteredHits = filteredHits
-        .filter(f => intersects(f.products, this.state.productsShowFilter))
-    }
-    if (this.state.tagsShowFilter.size > 0) {
-      filteredHits = filteredHits
-        .filter(f => intersects(f.tags, this.state.tagsShowFilter))
-    }
-    return filteredHits;
-  }
-
   render() {
     const columnTitles = ['Asset', 'Print Size', 'Product', 'Tags', 'Notes'];
 
@@ -282,7 +277,7 @@ class Assets extends React.Component {
                 columnTitles={columnTitles}
                 showHeader={false}
                 rowRenderer={mapper}
-                data={this.filterHits(this.state.hits)}
+                data={this.state.hits}
                 isError={this.state.isError}
                 isLoading={this.state.isLoading}
                 page={this.state.page}

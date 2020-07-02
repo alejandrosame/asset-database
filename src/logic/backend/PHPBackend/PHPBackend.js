@@ -45,20 +45,35 @@ class PHPBackend {
     return this.instances["public"].defaults.baseURL;
   }
 
-  get_assets(maxFetch=null, page=null, searchTerm=null) {
+  get_assets(maxFetch=null, page=null,
+    showProducts=null, hideProducts=null,
+    showTags=null, hideTags=null,
+    searchTerm=null
+  ) {
     if (page === null) {
       const url = '/api/asset/read.php';
       return this.instances["public"].get( url );
     }
 
+    if (showProducts === "") showProducts=null;
+    if (hideProducts === "") hideProducts=null;
+    if (showTags === "") showTags=null;
+    if (hideTags === "") hideTags=null;
+    if (searchTerm === "") searchTerm=null;
+
     const data = {
       params: {
         page: page,
-        page_size: maxFetch,
+        pageSize: maxFetch,
+        showProducts: showProducts,
+        hideProducts: hideProducts,
+        showTags: showTags,
+        hideTags: hideTags,
         searchTerm: searchTerm
       }
     }
 
+    console.log("page", page);
     const url = '/api/asset/readPage.php';
     return this.instances["public"].get( url, data );
   }
