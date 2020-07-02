@@ -25,6 +25,7 @@ const applyUpdateResult = (result) => (prevState) => ({
   page: result.page,
   isError: false,
   isLoading: false,
+  finished: result.finished
 });
 
 const applySetResult = (result) => (prevState) => ({
@@ -32,24 +33,20 @@ const applySetResult = (result) => (prevState) => ({
   page: result.page,
   isError: false,
   isLoading: false,
+  finished: result.finished
 });
 
 const applyEditorSetResult = (result) => (prevState) => ({
   editorHits: result.hits,
   isError: false,
   isLoading: false,
+  finished: result.finished
 });
 
 const applySetError = (prevState) => ({
   isError: true,
-  isLoading: false,
+  isLoading: false
 });
-
-/*
-const onRowClick = (record, index) => {
-  console.log(`Click nth(${index}) row of parent, record.name: ${record.key}`);
-};
-*/
 
 const resetState = {
   hits: [],
@@ -58,7 +55,8 @@ const resetState = {
   filter: '',
   isError: false,
   isLoading: false,
-  timeout: null
+  timeout: null,
+  finished: false
  };
 
 class Assets extends React.Component {
@@ -93,10 +91,18 @@ class Assets extends React.Component {
 
     backend.get_assets(maxFetch, page, filter)
       .then(response => {
+        let finished = false;
+        if (response.data.assets.length === 0) {
+          page = page-1;
+          finished = true;
+        }
+
         const result = {
           hits: response.data.assets,
-          page: page
+          page: page,
+          finished: finished
         };
+
         this.onSetResult(result, page);
       })
       .catch(error => notify.show("Something went wrong. Please, refresh page."))
@@ -165,6 +171,7 @@ class Assets extends React.Component {
             data={this.state.hits}
             isError={this.state.isError}
             isLoading={this.state.isLoading}
+            finished={this.state.finished}
             page={this.state.page}
             onPaginatedSearch={this.onPaginatedSearch}
           />

@@ -46,9 +46,9 @@ class PHPBackend {
   }
 
   get_assets(maxFetch=null, page=null,
+    searchTerm=null,
     showProducts=null, hideProducts=null,
-    showTags=null, hideTags=null,
-    searchTerm=null
+    showTags=null, hideTags=null
   ) {
     if (page === null) {
       const url = '/api/asset/read.php';
@@ -73,7 +73,6 @@ class PHPBackend {
       }
     }
 
-    console.log("page", page);
     const url = '/api/asset/readPage.php';
     return this.instances["public"].get( url, data );
   }

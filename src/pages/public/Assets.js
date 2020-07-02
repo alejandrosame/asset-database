@@ -29,6 +29,7 @@ const applyUpdateResult = (result) => (prevState) => {
     page: result.page,
     isError: false,
     isLoading: false,
+    finished: result.finished
   }
 };
 
@@ -40,27 +41,14 @@ const applySetResult = (result) => (prevState) => {
     page: result.page,
     isError: false,
     isLoading: false,
+    finished: result.finished
   }
 };
 
 const applySetError = (prevState) => ({
   isError: true,
-  isLoading: false,
+  isLoading: false
 });
-
-const intersects = (array, set) => {
-  for (let val of array){
-    if (set.has(val)) return true;
-  }
-  return false;
-}
-
-const doesNotIntersect = (array, set) => {
-  for (let val of array){
-    if (set.has(val)) return false;
-  }
-  return true;
-}
 
 class Assets extends React.Component {
   constructor(props) {
@@ -68,20 +56,20 @@ class Assets extends React.Component {
 
     this.state = {
       hits: [],
-      page: null,
+      page: 0,
       productsShowFilter: new Set(),
       tagsShowFilter: new Set(),
       productsHideFilter: new Set(),
       tagsHideFilter: new Set(),
       isError: false,
-      isLoading: false,
+      isLoading: true,
       refs: {},
       highlighted: null,
       isModalOpen: false,
       onShowTagModal: null,
       onHideTagModal: null,
       clickedTagModal: null,
-      clickedTagTypeModal: null
+      clickedTagTypeModal: null,
     };
   }
 
@@ -102,18 +90,25 @@ class Assets extends React.Component {
     this.setState({ isLoading: true });
 
     backend.get_assets(
-      maxFetch, page,
+      maxFetch, page, null,
       [...this.state.productsShowFilter].join(','),
       [...this.state.productsHideFilter].join(','),
       [...this.state.tagsShowFilter].join(','),
       [...this.state.tagsHideFilter].join(',')
     )
       .then(response => {
+        let finished = false;
+        if (response.data.assets.length === 0) {
+          page = page-1;
+          finished = true;
+        }
+
         const result = {
           hits: response.data.assets,
-          page: page
+          page: page,
+          finished: finished
         };
-        if (response.data.assets.length === 0) page = page-1;
+
         this.onSetResult(result, page);
 
         if (callback) {
@@ -281,8 +276,10 @@ class Assets extends React.Component {
                 isError={this.state.isError}
                 isLoading={this.state.isLoading}
                 page={this.state.page}
-                onPaginatedSearch={this.onPaginatedSearch}
+                loaderIsVisible={this.state.loaderIsVisible}
+                finished={this.state.finished}
                 highlighted={this.state.highlighted}
+                onPaginatedSearch={this.onPaginatedSearch}
               />
           </div>
         </div>

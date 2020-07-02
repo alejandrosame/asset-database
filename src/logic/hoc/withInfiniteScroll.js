@@ -1,21 +1,29 @@
 import React from 'react';
+import VizSensor from 'react-visibility-sensor';
 
-const withInfiniteScroll = (conditionFn) => (Component) =>
-  class WithInfiniteScroll extends React.Component {
-    componentDidMount() {
-      window.addEventListener('scroll', this.onScroll, false);
-    }
+const withInfiniteScroll =
+  (isItLoading, isItFinishedFetching, mustTriggerFetch) => (Component) => (props) =>
+{
+  const { onPaginatedSearch } = props;
 
-    componentWillUnmount() {
-      window.removeEventListener('scroll', this.onScroll, false);
-    }
+  let endBlock = <VizSensor onChange={
+       (isVisible) => isVisible && mustTriggerFetch(props) && onPaginatedSearch()
+  } >
+    <span>Loading...</span>
+  </VizSensor>;
 
-    onScroll = () =>
-      conditionFn(this.props) && this.props.onPaginatedSearch();
-
-    render() {
-      return <Component {...this.props} />;
-    }
+  if (isItLoading({...props})) {
+    endBlock = <span>Loading...</span>;
+  } else if (isItFinishedFetching({...props })){
+    endBlock = <span>End of database</span>;
   }
+
+  return (
+    <React.Fragment>
+      <Component {...props} />
+      { endBlock }
+    </React.Fragment>
+  );
+}
 
 export default withInfiniteScroll;
