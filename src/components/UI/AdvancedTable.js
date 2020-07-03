@@ -10,8 +10,7 @@ const paginatedCondition = ({page, isLoading, isError}) =>
 const mustTriggerFetch = ({
   data, loaderIsVisible, finished, isLoading, isError
 }) => {
-  return data.length
-    && !finished
+  return !finished
     && !isLoading
     && !isError;
 }

@@ -56,13 +56,13 @@ class Assets extends React.Component {
 
     this.state = {
       hits: [],
-      page: 0,
+      page: START_PAGE-1,
       productsShowFilter: new Set(),
       tagsShowFilter: new Set(),
       productsHideFilter: new Set(),
       tagsHideFilter: new Set(),
       isError: false,
-      isLoading: true,
+      isLoading: false,
       refs: {},
       highlighted: null,
       isModalOpen: false,
@@ -71,10 +71,6 @@ class Assets extends React.Component {
       clickedTagModal: null,
       clickedTagTypeModal: null,
     };
-  }
-
-  componentDidMount() {
-    this.fetchAssets(START_PAGE);
   }
 
   onPaginatedSearch = (e) =>

@@ -51,7 +51,7 @@ const applySetError = (prevState) => ({
 const resetState = {
   hits: [],
   editorHits: [],
-  page: null,
+  page: START_PAGE-1,
   filter: '',
   isError: false,
   isLoading: false,
@@ -64,10 +64,6 @@ class Assets extends React.Component {
     super(props);
     this.state = {...resetState};
     this.onReset = this.onReset.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchAssets(START_PAGE);
   }
 
   onReset() {
