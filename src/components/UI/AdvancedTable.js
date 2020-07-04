@@ -8,9 +8,9 @@ const paginatedCondition = ({page, isLoading, isError}) =>
   page !== null && !isLoading && isError;
 
 const mustTriggerFetch = ({
-  data, loaderIsVisible, finished, isLoading, isError
+  data, loaderIsVisible, isFinished, isLoading, isError
 }) => {
-  return !finished
+  return !isFinished
     && !isLoading
     && !isError;
 }
@@ -19,8 +19,8 @@ const isItLoading = ({isLoading}) => {
   return isLoading;
 }
 
-const isItFinishedFetching = ({finished}) => {
-  return finished;
+const isItFinishedFetching = ({isFinished}) => {
+  return isFinished;
 }
 
 const advancedTable = compose(

@@ -24,24 +24,12 @@ const createRefs = (list) => {
 const applyUpdateResult = (result) => (prevState) => {
   const newRefs = createRefs(result.hits);
   return {
-    hits: [...prevState.hits, ...result.hits],
-    refs: {...prevState.refs, ...newRefs},
+    hits: result.page===START_PAGE?[...result.hits]:[...prevState.hits, ...result.hits],
+    refs: result.page===START_PAGE?{...newRefs}:{...prevState.refs, ...newRefs},
     page: result.page,
+    isFinished: result.hits.length === 0,
     isError: false,
     isLoading: false,
-    finished: result.finished
-  }
-};
-
-const applySetResult = (result) => (prevState) => {
-  const newRefs = createRefs(result.hits);
-  return {
-    hits: result.hits,
-    refs: newRefs,
-    page: result.page,
-    isError: false,
-    isLoading: false,
-    finished: result.finished
   }
 };
 
@@ -63,6 +51,7 @@ class Assets extends React.Component {
       tagsHideFilter: new Set(),
       isError: false,
       isLoading: false,
+      isFinished: false,
       refs: {},
       highlighted: null,
       isModalOpen: false,
@@ -93,16 +82,9 @@ class Assets extends React.Component {
       [...this.state.tagsHideFilter].join(',')
     )
       .then(response => {
-        let finished = false;
-        if (response.data.assets.length === 0) {
-          page = page-1;
-          finished = true;
-        }
-
         const result = {
           hits: response.data.assets,
-          page: page,
-          finished: finished
+          page: page
         };
 
         this.onSetResult(result, page);
@@ -118,9 +100,7 @@ class Assets extends React.Component {
     this.setState(applySetError);
 
   onSetResult = (result, page) =>
-    page === START_PAGE
-      ? this.setState(applySetResult(result))
-      : this.setState(applyUpdateResult(result));
+    this.setState(applyUpdateResult(result));
 
   onClickProduct = (value) => {
     this.setState({
@@ -146,36 +126,92 @@ class Assets extends React.Component {
     const productsShowFilter = new Set(this.state.productsShowFilter);
     productsShowFilter.add(value);
     this.setState({
-      page: 1,
+      page: START_PAGE-1,
+      isFinished: false,
       isModalOpen: false,
-      productsShowFilter: productsShowFilter })
+      productsShowFilter: productsShowFilter
+    });
+    setTimeout(() => this.fetchAssets(START_PAGE), 100);
+  }
+
+  onDeleteShowProduct = (value) => {
+    const productsShowFilter = new Set(this.state.productsShowFilter);
+    productsShowFilter.delete(value);
+    this.setState({
+      page: START_PAGE-1,
+      isFinished: false,
+      productsShowFilter: productsShowFilter
+    });
+    setTimeout(() => this.fetchAssets(START_PAGE), 100);
   }
 
   onClickShowTag = (value) => {
     const tagsShowFilter = new Set(this.state.tagsShowFilter);
     tagsShowFilter.add(value);
     this.setState({
-      page: 1,
+      page: START_PAGE-1,
+      isFinished: false,
       isModalOpen: false,
-      tagsShowFilter: tagsShowFilter })
+      tagsShowFilter: tagsShowFilter
+    });
+    setTimeout(() => this.fetchAssets(START_PAGE), 100);
+  }
+
+  onDeleteShowTag = (value) => {
+    const tagsShowFilter = new Set(this.state.tagsShowFilter);
+    tagsShowFilter.delete(value);
+    this.setState({
+      page: START_PAGE-1,
+      isFinished: false,
+      tagsShowFilter: tagsShowFilter
+    });
+    setTimeout(() => this.fetchAssets(START_PAGE), 100);
   }
 
   onClickHideProduct = (value) => {
     const productsHideFilter = new Set(this.state.productsHideFilter);
     productsHideFilter.add(value);
     this.setState({
-      page: 1,
+      page: START_PAGE-1,
+      isFinished: false,
       isModalOpen: false,
-      productsHideFilter: productsHideFilter })
+      productsHideFilter: productsHideFilter
+    });
+    setTimeout(() => this.fetchAssets(START_PAGE), 100);
+  }
+
+  onDeleteHideProduct = (value) => {
+    const productsHideFilter = new Set(this.state.productsHideFilter);
+    productsHideFilter.delete(value);
+    this.setState({
+      page: START_PAGE-1,
+      isFinished: false,
+      productsHideFilter: productsHideFilter
+    });
+    setTimeout(() => this.fetchAssets(START_PAGE), 100);
   }
 
   onClickHideTag = (value) => {
     const tagsHideFilter = new Set(this.state.tagsHideFilter);
     tagsHideFilter.add(value);
     this.setState({
-      page: 1,
+      page: START_PAGE-1,
+      isFinished: false,
       isModalOpen: false,
-      tagsHideFilter: tagsHideFilter })
+      tagsHideFilter: tagsHideFilter
+    });
+    setTimeout(() => this.fetchAssets(START_PAGE), 100);
+  }
+
+  onDeleteHideTag = (value) => {
+    const tagsHideFilter = new Set(this.state.tagsHideFilter);
+    tagsHideFilter.delete(value);
+    this.setState({
+      page: START_PAGE-1,
+      isFinished: false,
+      tagsHideFilter: tagsHideFilter
+    });
+    setTimeout(() => this.fetchAssets(START_PAGE), 100);
   }
 
   onClickRelated = (id) => {
@@ -192,30 +228,6 @@ class Assets extends React.Component {
       this.setState({ highlighted: id });
       setTimeout(() => this.setState({ highlighted: null }), 6000);
     }, 200);
-  }
-
-  onDeleteShowProduct = (value) => {
-    const productsShowFilter = new Set(this.state.productsShowFilter);
-    productsShowFilter.delete(value);
-    this.setState({ productsShowFilter: productsShowFilter })
-  }
-
-  onDeleteShowTag = (value) => {
-    const tagsShowFilter = new Set(this.state.tagsShowFilter);
-    tagsShowFilter.delete(value);
-    this.setState({ tagsShowFilter: tagsShowFilter })
-  }
-
-  onDeleteHideProduct = (value) => {
-    const productsHideFilter = new Set(this.state.productsHideFilter);
-    productsHideFilter.delete(value);
-    this.setState({ productsHideFilter: productsHideFilter })
-  }
-
-  onDeletehideTag = (value) => {
-    const tagsHideFilter = new Set(this.state.tagsHideFilter);
-    tagsHideFilter.delete(value);
-    this.setState({ tagsHideFilter: tagsHideFilter })
   }
 
   onOpenModal = () => {
@@ -271,9 +283,9 @@ class Assets extends React.Component {
                 data={this.state.hits}
                 isError={this.state.isError}
                 isLoading={this.state.isLoading}
+                isFinished={this.state.isFinished}
                 page={this.state.page}
                 loaderIsVisible={this.state.loaderIsVisible}
-                finished={this.state.finished}
                 highlighted={this.state.highlighted}
                 onPaginatedSearch={this.onPaginatedSearch}
               />

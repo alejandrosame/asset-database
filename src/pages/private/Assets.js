@@ -21,26 +21,18 @@ Modal.setAppElement("#root");
 const START_PAGE = 1;
 
 const applyUpdateResult = (result) => (prevState) => ({
-  hits: [...prevState.hits, ...result.hits],
+  hits: result.page===START_PAGE?[...result.hits]:[...prevState.hits, ...result.hits],
   page: result.page,
+  isFinished: result.hits.length === 0,
   isError: false,
   isLoading: false,
-  finished: result.finished
-});
-
-const applySetResult = (result) => (prevState) => ({
-  hits: result.hits,
-  page: result.page,
-  isError: false,
-  isLoading: false,
-  finished: result.finished
 });
 
 const applyEditorSetResult = (result) => (prevState) => ({
   editorHits: result.hits,
+  isFinished: result.hits.length === 0,
   isError: false,
   isLoading: false,
-  finished: result.finished
 });
 
 const applySetError = (prevState) => ({
@@ -55,8 +47,8 @@ const resetState = {
   filter: '',
   isError: false,
   isLoading: false,
+  isFinished: false,
   timeout: null,
-  finished: false
  };
 
 class Assets extends React.Component {
@@ -87,16 +79,9 @@ class Assets extends React.Component {
 
     backend.get_assets(maxFetch, page, filter)
       .then(response => {
-        let finished = false;
-        if (response.data.assets.length === 0) {
-          page = page-1;
-          finished = true;
-        }
-
         const result = {
           hits: response.data.assets,
           page: page,
-          finished: finished
         };
 
         this.onSetResult(result, page);
@@ -108,9 +93,7 @@ class Assets extends React.Component {
     this.setState(applySetError);
 
   onSetResult = (result, page) =>
-    page === START_PAGE
-      ? this.setState(applySetResult(result))
-      : this.setState(applyUpdateResult(result));
+    this.setState(applyUpdateResult(result));
 
   onSetEditorResult = (result) =>
     this.setState(applyEditorSetResult(result))
@@ -167,7 +150,7 @@ class Assets extends React.Component {
             data={this.state.hits}
             isError={this.state.isError}
             isLoading={this.state.isLoading}
-            finished={this.state.finished}
+            isFinished={this.state.isFinished}
             page={this.state.page}
             onPaginatedSearch={this.onPaginatedSearch}
           />

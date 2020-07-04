@@ -137,7 +137,7 @@ export const checkEnv = (requiredEnv) => {
 }
 
 export const capitalize = (str) => {
-  if (typeof str.charAt === 'function'){
+  if (str && typeof str.charAt === 'function'){
     return str.charAt(0).toUpperCase() + str.slice(1);
   } else {
     return str;
