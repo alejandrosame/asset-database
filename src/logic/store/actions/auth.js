@@ -69,8 +69,11 @@ export const login = (id, password) => {
         dispatch(handleAutoLogout());
       })
       .catch(error => {
-        console.log(error);
-        dispatch(authFailure(error.response.data.error));
+        var message = "";
+        if (error.response) message = error.response.data.message;
+        else message = error.message;
+        console.log("Failed ", message);
+        dispatch(authFailure(message));
       });
   };
 };
@@ -87,8 +90,11 @@ const renewToken = () => {
         dispatch(handleAutoLogout());
       })
       .catch(error => {
-        if (error.response) console.log("Failed ", error.response.data.message)
-        else console.log("Failed ", error.message)
+        var message = "";
+        if (error.response) message = error.response.data.message;
+        else message = error.message;
+        console.log("Failed ", message);
+        dispatch(authFailure(message));
       })
   };
 };
