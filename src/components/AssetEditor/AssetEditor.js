@@ -41,30 +41,40 @@ class AssetEditor extends React.Component {
     this.setState({ isLoading: true });
 
     const backend = new Backend();
-    let sizeOptions = backend.get_size_options();
-    backend.get_products()
+    backend.get_display_sizes()
       .then(response => {
-        const productOptions = response.data.products
-          .map( product => product.name )
+          const sizeOptions = response.data.display_sizes
+          .map( size => size.name )
           .reduce( (arr, el) => arr.concat(el), [] );
 
-        backend.get_tags()
-          .then(response => {
-            const tagOptions = response.data.tags
-              .map(tag => { return {"id": tag.id, "value": tag.name} })
+          backend.get_products()
+            .then(response => {
+              const productOptions = response.data.products
+              .map( product => product.name )
               .reduce( (arr, el) => arr.concat(el), [] );
 
-            this.onSetSuccess(sizeOptions, productOptions, tagOptions);
-          })
+              backend.get_tags()
+                .then(response => {
+                  const tagOptions = response.data.tags
+                  .map(tag => { return {"id": tag.id, "value": tag.name} })
+                  .reduce( (arr, el) => arr.concat(el), [] );
+
+                  this.onSetSuccess(sizeOptions, productOptions, tagOptions);
+                })
+                .catch(error => {
+                  console.log("Error loading tags: " + error);
+                  this.onSetError();
+                });
+            })
+            .catch(error => {
+              console.log("Error loading products: " + error);
+              this.onSetError();
+            });
           .catch(error => {
-            console.log("Error loading tags: " + error);
+            console.log("Error loading display size options: " + error);
             this.onSetError();
           });
       })
-      .catch(error => {
-        console.log("Error loading products: " + error);
-        this.onSetError();
-      });
   }
 
   onSetError = () =>

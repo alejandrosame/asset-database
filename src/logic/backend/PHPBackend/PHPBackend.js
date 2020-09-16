@@ -99,6 +99,16 @@ class PHPBackend {
     return this.instances["private"].get( url );
   }
 
+  get_display_sizes() {
+    let url = '/api/displaySize/read.php';
+    return this.instances["private"].get( url );
+  }
+
+  get_printed_sizes() {
+    let url = '/api/printedSize/read.php';
+    return this.instances["private"].get( url );
+  }
+
   get_images() {
     let url = '/api/image/read.php';
     return this.instances["private"].get( url );
@@ -107,10 +117,6 @@ class PHPBackend {
   get_users() {
     let url = '/api/user/read.php';
     return this.instances["private"].get( url );
-  }
-
-  get_size_options() {
-    return ["Small", "Medium", "Huge"];
   }
 
   insert_tag(value) {
@@ -128,6 +134,24 @@ class PHPBackend {
     }
 
     let url = '/api/product/create.php';
+    return this.instances["private"].post( url, data );
+  }
+
+  insert_display_size(value) {
+    const data = {
+      "name": value
+    }
+
+    let url = '/api/displaySize/create.php';
+    return this.instances["private"].post( url, data );
+  }
+
+  insert_printed_size(value) {
+    const data = {
+      "name": value
+    }
+
+    let url = '/api/printedSize/create.php';
     return this.instances["private"].post( url, data );
   }
 
@@ -206,6 +230,24 @@ class PHPBackend {
     }
 
     let url = '/api/product/delete.php';
+    return this.instances["private"].post( url, data );
+  }
+
+  delete_display_size(id) {
+    const data = {
+      "id": id
+    }
+
+    let url = '/api/displaySize/delete.php';
+    return this.instances["private"].post( url, data );
+  }
+
+  delete_printed_size(id) {
+    const data = {
+      "id": id
+    }
+
+    let url = '/api/printedSize/delete.php';
     return this.instances["private"].post( url, data );
   }
 

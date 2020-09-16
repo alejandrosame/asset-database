@@ -10,6 +10,7 @@ import Images from 'pages/private/Images';
 import Logout from 'pages/private/Logout';
 import PasswordChange from 'pages/private/PasswordChange';
 import Tags from 'pages/private/Tags';
+import Sizes from 'pages/private/Sizes';
 import Users from 'pages/private/Users';
 
 
@@ -40,6 +41,9 @@ class Private extends React.Component {
           {usersRoute}
           <Route path={`${this.props.match.path}/tags`} exact
             render={() => <Tags isAuthenticated={this.props.isAuthenticated}/>}
+          />
+          <Route path={`${this.props.match.path}/sizes`} exact
+            render={() => <Sizes isAuthenticated={this.props.isAuthenticated}/>}
           />
           <Route path={`${this.props.match.path}`} exact
             render={() => <Assets isAuthenticated={this.props.isAuthenticated}/>}

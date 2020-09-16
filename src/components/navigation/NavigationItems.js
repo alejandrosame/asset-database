@@ -16,6 +16,7 @@ const navigationItems = ({isAdmin, username}) => {
       <NavigationItem link="/private" exact>Edit assets</NavigationItem>
       <NavigationItem link="/private/images">Manage images</NavigationItem>
       <NavigationItem link="/private/tags">Manage tags</NavigationItem>
+      <NavigationItem link="/private/sizes">Manage sizes</NavigationItem>
       {userNav}
       <NavigationItemList title={username}
         itemList={[
