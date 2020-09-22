@@ -115,6 +115,9 @@ const getUpdateData = (assetCSV, assetDB) => {
 
   const updateData = {}
 
+  if (assetDB.display_size === null) assetDB.display_size = "";
+  if (assetDB.printed_size === null) assetDB.printed_size = "";
+
   if (assetCSV.displaySize.toLowerCase() !== assetDB.display_size.toLowerCase()){
     updateData["updateDisplaySize"] = assetCSV.displaySize.toLowerCase();
   }
@@ -153,7 +156,7 @@ const getUpdateData = (assetCSV, assetDB) => {
   } );
   const CSVTags = assetCSV.tags.map(x => {
     return x.toString().toLowerCase();
-  } );
+  } ).filter(el => el !== "");;
   const intersectionTags = intersection(DBTags, CSVTags);
   const addTags = difference(CSVTags, intersectionTags);
   if (addTags.length > 0) {
@@ -184,8 +187,17 @@ const getErrorFields = (msg) => [
 
 const applyFields = (asset, fields) => update( asset, {$add: fields} );
 
-const resetState = { isOpen: false, uploading: false, finished: false,
-  assets: [], index: 0, processedTags: new Set(), processedProducts: new Set() };
+const resetState = {
+  isOpen: false,
+  uploading: false,
+  finished: false,
+  assets: [],
+  index: 0,
+  processedTags: new Set(),
+  processedProducts: new Set(),
+  processedDisplaySizes: new Set(),
+  processedPrintedSizes: new Set()
+};
 
 class AssetUploaderModal extends React.Component {
   constructor(props) {
@@ -333,6 +345,44 @@ class AssetUploaderModal extends React.Component {
       })
   })
 
+  onAddPrintedSize = (printedSizeName) => new Promise((resolve, reject) => {
+    if (this.state.processedPrintedSizes.has(printedSizeName)){
+      resolve();
+      return;
+    }
+
+    const processedPrintedSizes = new Set(this.state.processedPrintedSizes);
+    const backend = new Backend();
+    backend.insert_printed_size(printedSizeName)
+      .then(response => {
+        resolve();
+      })
+      .catch(error => resolve({"printedSize": printedSizeName}))
+      .finally(() => {
+        processedPrintedSizes.add(printedSizeName);
+        this.setState({ processedPrintedSizes: processedPrintedSizes });
+      })
+  })
+
+  onAddDisplaySize = (displaySizeName) => new Promise((resolve, reject) => {
+    if (this.state.processedDisplaySizes.has(displaySizeName)){
+      resolve();
+      return;
+    }
+
+    const processedDisplaySizes = new Set(this.state.processedDisplaySizes);
+    const backend = new Backend();
+    backend.insert_display_size(displaySizeName)
+      .then(response => {
+        resolve();
+      })
+      .catch(error => resolve({"displaySize": displaySizeName}))
+      .finally(() => {
+        processedDisplaySizes.add(displaySizeName);
+        this.setState({ processedDisplaySizes: processedDisplaySizes });
+      })
+  })
+
   onUpdateAsset = (assetCSV, assetDB) => new Promise((resolve, reject) => {
     const promises=[];
     const updateData = getUpdateData(assetCSV, assetDB);
@@ -349,6 +399,14 @@ class AssetUploaderModal extends React.Component {
       for (let tagName of updateData["addTags"]) {
         promises.push(this.onAddTag(tagName));
       }
+    }
+
+    if ("updateDiplaySize" in updateData ) {
+      promises.push(this.onAddDisplaySize(updateData["updateDisplaySize"]));
+    }
+
+    if ("updatePrintSize" in updateData ) {
+      promises.push(this.onAddPrintedSize(updateData["updatePrintSize"]));
     }
 
     Promise.all(promises)
@@ -401,7 +459,10 @@ class AssetUploaderModal extends React.Component {
       let msg = JSON.stringify(error);
       if ("response" in error) {
         msg = `Server error ${error.response.status}: ${error.response.data.message}`;
+      } else if ("message" in error) {
+        msg = `Server error: ${error.message}`;
       }
+
       reject(new Error(msg));
     })
   });
