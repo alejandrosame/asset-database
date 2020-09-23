@@ -295,7 +295,11 @@ class AssetUploaderModal extends React.Component {
     const backend = new Backend();
     backend.insert_asset(asset)
     .then(response => {
-      const assetDB = {...asset,  products: [], tags: [], related_assets: []}
+      const assetDB = {...asset,
+                       display_size: "",
+                       printed_size: "",
+                       products: [], tags: [], related_assets: []
+                      }
       this.onUpdateAsset(asset, assetDB)
         .then(response => resolve())
         .catch(error => {
@@ -461,7 +465,7 @@ class AssetUploaderModal extends React.Component {
       if ("response" in error) {
         msg = `Server error ${error.response.status}: ${error.response.data.message}`;
       } else if ("message" in error) {
-        msg = `Server error: ${error.message}`;
+        msg = `Client error: ${error.message}`;
       }
 
       reject(new Error(msg));
