@@ -386,6 +386,7 @@ class AssetUploaderModal extends React.Component {
   onUpdateAsset = (assetCSV, assetDB) => new Promise((resolve, reject) => {
     const promises=[];
     const updateData = getUpdateData(assetCSV, assetDB);
+
     if (Object.entries(updateData).length === 0) {
       resolve();
       return;
@@ -401,7 +402,7 @@ class AssetUploaderModal extends React.Component {
       }
     }
 
-    if ("updateDiplaySize" in updateData ) {
+    if ("updateDisplaySize" in updateData ) {
       promises.push(this.onAddDisplaySize(updateData["updateDisplaySize"]));
     }
 
