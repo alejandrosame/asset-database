@@ -117,11 +117,22 @@ class Assets extends React.Component {
     this.setState({ showModal: false });
   }
 
+  onDeleteAsset = (id) => {
+    this.setState({ isLoading: true });
+    const backend = new Backend();
+
+    backend.delete_asset(id)
+      .then( response => {
+        this.onReset();
+      })
+      .catch( error => this.onSetError() );
+  }
+
   render() {
-    const columnTitles = ["Asset", "Order", "Print Size", "Display Size", "Product",
+    const columnTitles = ["", "Asset", "Order", "Print Size", "Display Size", "Product",
     "Tags", "Related", "Notes"];
 
-    const mapper = assetMapper();
+    const mapper = assetMapper(this.onDeleteAsset);
     return (
       <div className={pageClasses.Page}>
         <div className={pageClasses.Actions}>

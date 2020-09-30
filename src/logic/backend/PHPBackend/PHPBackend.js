@@ -215,6 +215,15 @@ class PHPBackend {
     return this.instances["private"].post( url, data );
   }
 
+  delete_asset(id) {
+    const data = {
+      "id": id
+    }
+
+    let url = '/api/asset/delete.php';
+    return this.instances["private"].post( url, data );
+  }
+
   delete_tag(id) {
     const data = {
       "id": id
