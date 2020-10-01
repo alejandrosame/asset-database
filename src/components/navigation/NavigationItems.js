@@ -13,7 +13,7 @@ const navigationItems = ({isAdmin, username}) => {
 
   return (
     <ul className={classes.NavigationItems}>
-      <NavigationItem link="/private" exact>Edit assets</NavigationItem>
+      <NavigationItem link="/private" exact>Manage assets</NavigationItem>
       <NavigationItem link="/private/images">Manage images</NavigationItem>
       <NavigationItem link="/private/tags">Manage tags</NavigationItem>
       <NavigationItem link="/private/sizes">Manage sizes</NavigationItem>
