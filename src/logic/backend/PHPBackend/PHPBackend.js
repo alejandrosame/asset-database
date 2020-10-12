@@ -215,6 +215,26 @@ class PHPBackend {
     return this.instances["private"].post( url, data );
   }
 
+  update_tag(id, name) {
+    const data = {
+      "id": id,
+      "name": name
+    }
+
+    let url = '/api/tag/update.php';
+    return this.instances["private"].post( url, data );
+  }
+
+  update_product(id, name) {
+    const data = {
+      "id": id,
+      "name": name
+    }
+
+    let url = '/api/product/update.php';
+    return this.instances["private"].post( url, data );
+  }
+
   delete_asset(id) {
     const data = {
       "id": id
