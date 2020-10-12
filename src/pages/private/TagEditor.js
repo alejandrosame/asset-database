@@ -12,7 +12,7 @@ const confirmDeletion = (value, id, onDelete) => {
   }
 }
 
-const tagEditor = ({ tags, label, onKeyUpAdd, onKeyUpSearch, onDelete }) =>
+const tagEditor = ({ tags, label, onKeyUpAdd, onKeyUpSearch, onDelete, onEdit, canEdit }) =>
   <div className={classes.TagEditor}>
     <h2>{label}</h2>
     <div className={classes.ActionBar}>
@@ -34,7 +34,10 @@ const tagEditor = ({ tags, label, onKeyUpAdd, onKeyUpSearch, onDelete }) =>
           return (
             <Tag
               key={tag.id}
+              id={tag.id}
               onDelete={() => confirmDeletion(tag.value, tag.id, onDelete) }
+              onEdit={onEdit}
+              editable={canEdit}
             >
               {tag.value}
             </Tag>

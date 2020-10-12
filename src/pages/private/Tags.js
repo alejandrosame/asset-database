@@ -139,6 +139,29 @@ class Tags extends React.Component {
       .catch( error => this.onSetError() );
   }
 
+  onEditTag = (collection) => (id) => (value) => {
+    console.log(collection, id, value);
+    this.setState({ isLoading: true });
+    const backend = new Backend();
+
+    let request;
+    if (collection === "tags") {
+      request = backend.delete_tag(id);
+    } else {
+      request = backend.delete_product(id);
+    }
+
+    request
+      .then( response => {
+        const newCollection = update(
+          this.state[collection],
+          {$set: this.state[collection].filter(item => item.id !== id)}
+        );
+        this.onSetCollection(collection, newCollection);
+      })
+      .catch( error => this.onSetError() );
+  }
+
   onAddFilter = (collection) => (filterValue) =>
     this.setState( { [`${collection}Filter`]: filterValue } );
 
@@ -160,6 +183,8 @@ class Tags extends React.Component {
               (event) => this.onKeyUp(event, this.onAddFilter("products"))
             }
             onDelete={(tagIdx) => this.onDeleteTag("products")(tagIdx)}
+            onEdit={(tagIdx) => (value) =>               this.onEditTag("products")(tagIdx)(value)}
+            canEdit={true}
           />
         </div>
         <div>
@@ -171,6 +196,8 @@ class Tags extends React.Component {
               (event) => this.onKeyUp(event, this.onAddFilter("tags"))
             }
             onDelete={(tagIdx) => this.onDeleteTag("tags")(tagIdx)}
+            onEdit={(tagIdx) => (value) =>               this.onEditTag("tags")(tagIdx)(value)}
+            canEdit={true}
           />
         </div>
       </React.Fragment>
