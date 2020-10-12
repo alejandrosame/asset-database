@@ -235,6 +235,26 @@ class PHPBackend {
     return this.instances["private"].post( url, data );
   }
 
+  update_display_size(id, name) {
+    const data = {
+      "id": id,
+      "name": name
+    }
+
+    let url = '/api/displaySize/update.php';
+    return this.instances["private"].post( url, data );
+  }
+
+  update_printed_size(id, name) {
+    const data = {
+      "id": id,
+      "name": name
+    }
+
+    let url = '/api/printedSize/update.php';
+    return this.instances["private"].post( url, data );
+  }
+
   delete_asset(id) {
     const data = {
       "id": id

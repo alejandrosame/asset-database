@@ -139,6 +139,34 @@ class Sizes extends React.Component {
       .catch( error => this.onSetError() );
   }
 
+  onEditTag = (collection) => (id) => (tagValue) => {
+    this.setState({ isLoading: true });
+    const backend = new Backend();
+
+    let request;
+    if (collection === "displaySizes") {
+      request = backend.update_display_size(id, tagValue);
+    } else {
+      request = backend.update_printed_size(id, tagValue);
+    }
+
+    request
+      .then( response => {
+        let newCollection = update(
+          this.state[collection],
+          {$set: this.state[collection].filter(item => item.id !== id)}
+        );
+        newCollection = update(newCollection, {
+          $push: [{
+            id: response.data.id,
+            value: tagValue
+          }]}
+        );
+        this.onSetCollection(collection, newCollection);
+      })
+      .catch( error => this.onSetError() );
+  }
+
   onAddFilter = (collection) => (filterValue) =>
     this.setState( { [`${collection}Filter`]: filterValue } );
 
@@ -160,6 +188,8 @@ class Sizes extends React.Component {
               (event) => this.onKeyUp(event, this.onAddFilter("printedSizes"))
             }
             onDelete={(tagIdx) => this.onDeleteTag("printedSizes")(tagIdx)}
+            onEdit={(tagIdx) => (value) =>               this.onEditTag("printedSizes")(tagIdx)(value)}
+            canEdit={true}
           />
         </div>
         <div>
@@ -171,6 +201,8 @@ class Sizes extends React.Component {
               (event) => this.onKeyUp(event, this.onAddFilter("displaySizes"))
             }
             onDelete={(tagIdx) => this.onDeleteTag("displaySizes")(tagIdx)}
+            onEdit={(tagIdx) => (value) =>               this.onEditTag("displaySizes")(tagIdx)(value)}
+            canEdit={true}
           />
         </div>
       </React.Fragment>
