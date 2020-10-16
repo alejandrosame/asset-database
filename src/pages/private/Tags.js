@@ -158,7 +158,7 @@ class Tags extends React.Component {
         );
         newCollection = update(newCollection, {
           $push: [{
-            id: response.data.id,
+            id: id,
             value: tagValue
           }]}
         );

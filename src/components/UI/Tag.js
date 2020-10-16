@@ -17,9 +17,18 @@ const tag = ({ children, id, onDelete, onClick, onEdit, editable = false }) => {
   if(onClick) onClickFn = () => onClick();
 
   const handleChange = event => {
-    if (event.key === 'Enter') {
-      let value = event.target.innerText
-      value = value.replace(/[^\x20-\x7E]/gmi, "");
+    const keyCode = event.keyCode || event.which
+
+    // If enter is pressed
+    if (keyCode === 13) {
+      // Disable new line behaviour
+      event.returnValue = false
+      if (event.preventDefault){
+        event.preventDefault();
+      }
+
+      // Confirm if user wants to update tag value to new value
+      let value = event.target.innerText;
 
       if (value !== children){
         const shouldUpdate = window.confirm(`Do you want to update from '${children}' to '${value}'?`);
@@ -27,11 +36,9 @@ const tag = ({ children, id, onDelete, onClick, onEdit, editable = false }) => {
         if (shouldUpdate) {
           onEdit(id)(value);
         } else {
-          value = children;
+          event.target.innerText = children;
         }
       }
-
-      event.target.innerText = value;
     }
   }
 
@@ -41,7 +48,7 @@ const tag = ({ children, id, onDelete, onClick, onEdit, editable = false }) => {
       <ContentEditable
         html={children}
         disabled={!editable && onEdit != null}
-        onKeyUp={onEdit?handleChange:null}
+        onKeyPress={onEdit?handleChange:null}
       />
   </span>;
   }
