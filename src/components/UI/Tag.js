@@ -30,12 +30,12 @@ const tag = ({ children, id, onDelete, onClick, onEdit, editable = false }) => {
           value = children;
         }
       }
-  
+
       event.target.innerText = value;
     }
   }
 
-  let content = <span>children</span>;
+  let content = <span>{children}</span>;
   if (onEdit) {
     content = <span>
       <ContentEditable
