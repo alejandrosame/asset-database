@@ -247,23 +247,21 @@ class Assets extends React.Component {
                                this.state.refs
                               );
 
+    let filterFeedbackArea = <FilterFeedback
+          productsShowFilter={this.state.productsShowFilter}
+          tagsShowFilter={this.state.tagsShowFilter}
+          productsHideFilter={this.state.productsHideFilter}
+          tagsHideFilter={this.state.tagsHideFilter}
+          onDeleteShowProduct={this.onDeleteShowProduct}
+          onDeleteShowTag={this.onDeleteShowTag}
+          onDeleteHideProduct={this.onDeleteHideProduct}
+          onDeleteHideTag={this.onDeleteHideTag}
+        />;
+
     return (
       <React.Fragment>
         <div className={pageClasses.Page}>
-          <div className={pageClasses.Actions}>
-            <div>
-              <FilterFeedback
-                productsShowFilter={this.state.productsShowFilter}
-                tagsShowFilter={this.state.tagsShowFilter}
-                productsHideFilter={this.state.productsHideFilter}
-                tagsHideFilter={this.state.tagsHideFilter}
-                onDeleteShowProduct={this.onDeleteShowProduct}
-                onDeleteShowTag={this.onDeleteShowTag}
-                onDeleteHideProduct={this.onDeleteHideProduct}
-                onDeleteHideTag={this.onDeleteHideTag}
-              />
-            </div>
-          </div>
+          {filterFeedbackArea}
           <div className={pageClasses.Content}>
               <SelectFilterTypeModal
                 showModal={this.state.isModalOpen}

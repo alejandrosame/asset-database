@@ -58,14 +58,38 @@ const filterFeedback = ({ productsShowFilter, tagsShowFilter,
   return arr.concat(el);
   }, [] )
 
+  let countShowFilters = productsShowFilter.size + tagsShowFilter.size;
+  let countHideFilters = productsHideFilter.size + tagsHideFilter.size;
+
+  let showFilters = null;
+  let hideFilters = null;
+
+  if (countShowFilters > 0) {
+    showFilters = (
+      <div key="showFilters" className={classes.FilterBox}>
+        <strong className={classes.FeedbackText}>Currently showing</strong>
+        <div className={classes.TagList}>
+          {showProductTags} {showTags}
+        </div>
+      </div>
+    );
+  }
+
+  if (countHideFilters > 0) {
+    hideFilters = (
+      <div key="hideFilters" className={classes.FilterBox}>
+        <strong className={classes.FeedbackText}>Currently hiding</strong>
+        <div className={classes.TagList}>
+          {hideProductTags} {hideTags}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={classes.FeedbackArea}>
-      <div>
-        <strong className={classes.FeedbackText}>Currently showing:</strong> {showProductTags} {showTags}
-      </div>
-      <div>
-        <strong className={classes.FeedbackText}>Currently hiding:</strong> {hideProductTags} {hideTags}
-      </div>
+      {showFilters}
+      {hideFilters}
     </div>
   );
 }
