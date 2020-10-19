@@ -7,6 +7,14 @@ const applyClass = (classModules) => (className) => {
   return modules.map(module =>  module[className]).join(" ");
 }
 
+const highlightRow = (id, idToHighlight) => {
+  if (id === idToHighlight || parseInt(id) === idToHighlight) {
+    return classes.Highlighted;
+  }
+
+  return null;
+}
+
 const table = ({
     classModules=[], title=null, columnTitles=[], showTitle=false, showHeader=false,
     rowRenderer,
@@ -30,10 +38,7 @@ const table = ({
             {data.map(row => (
               <tr key={rowRenderer['getId'](row)}
                   ref={rowRenderer['getRef']?rowRenderer['getRef'](row):null}
-                  className={rowRenderer['getId'](row)===highlighted
-                    ?classes.Highlighted
-                    :null
-                  }
+                  className={highlightRow(rowRenderer['getId'](row), highlighted)}
               >
                 {rowRenderer.renderColumns(row).map((column, idx) => (
                   <td key={idx}>

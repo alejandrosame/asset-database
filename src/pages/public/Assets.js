@@ -214,6 +214,13 @@ class Assets extends React.Component {
     setTimeout(() => this.fetchAssets(START_PAGE), 100);
   }
 
+  onClickRelatedStart = (id) => {
+    if (this.state.highlighted) return;
+    this.setState({ highlighted: id });
+
+    this.onClickRelated(id);
+  }
+
   onClickRelated = (id) => {
     if (this.state.refs[id] === undefined) {
       this.onAutomaticPaginatedSearch(this.onClickRelated.bind(this, id));
@@ -222,10 +229,9 @@ class Assets extends React.Component {
     setTimeout(() => {
       this.state.refs[id].current.scrollIntoView({
         behavior: 'smooth',
-        block: 'start',
+        block: 'center',
       });
 
-      this.setState({ highlighted: id });
       setTimeout(() => this.setState({ highlighted: null }), 6000);
     }, 200);
   }
@@ -242,7 +248,7 @@ class Assets extends React.Component {
     const columnTitles = ['Asset', 'Print Size', 'Product', 'Tags', 'Notes'];
 
     const mapper = assetMapper(this.onClickProduct, this.onClickTag,
-                               this.onClickRelated,
+                               this.onClickRelatedStart,
                                this.state.productsShowFilter, this.state.tagsShowFilter,
                                this.state.refs
                               );
