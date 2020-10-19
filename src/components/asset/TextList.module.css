@@ -1,7 +1,6 @@
 .Base {
   white-space: nowrap;
   margin: 0.5px;
-  float: left;
 }
 
 .Base:not(:last-child):after {
