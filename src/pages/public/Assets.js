@@ -218,12 +218,12 @@ class Assets extends React.Component {
     if (this.state.highlighted) return;
     this.setState({ highlighted: id });
 
-    this.onClickRelated(id);
+    this.onClickRelated(id, 200);
   }
 
-  onClickRelated = (id) => {
+  onClickRelated = (id, delay) => {
     if (this.state.refs[id] === undefined) {
-      this.onAutomaticPaginatedSearch(this.onClickRelated.bind(this, id));
+      this.onAutomaticPaginatedSearch(this.onClickRelated.bind(this, id, 500));
       return;
     }
     setTimeout(() => {
@@ -232,8 +232,8 @@ class Assets extends React.Component {
         block: 'center',
       });
 
-      setTimeout(() => this.setState({ highlighted: null }), 6000);
-    }, 200);
+      setTimeout(() => this.setState({ highlighted: null }), 1500);
+    }, delay);
   }
 
   onOpenModal = () => {

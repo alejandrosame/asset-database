@@ -7,7 +7,7 @@
 }
 
 .Highlighted {
-  animation: target-fade 10s 10;
+  animation: target-fade 5s 10;
 }
 
 @keyframes target-fade {
