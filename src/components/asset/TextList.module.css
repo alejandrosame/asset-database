@@ -1,10 +1,12 @@
 .Base {
   white-space: nowrap;
   margin: 0.5px;
+  float: left;
 }
 
 .Base:not(:last-child):after {
-  content: ", ";
+  content: ",";
+  margin-right: 5px;
 }
 
 .Tag:hover {

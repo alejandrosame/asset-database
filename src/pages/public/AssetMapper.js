@@ -15,7 +15,7 @@ const assetMapper = (productFn, tagFn, relatedFn, productsFilter, tagsFilter, re
       <Viz baseImageURL={b.get_base_image_URL()} {...row} />,
       <TextList list={[row.printed_size]} />,
       <TextList list={row.products} filtered={productsFilter} clicked={productFn} />,
-      <TextList list={row.tags} filtered={tagsFilter} clicked={tagFn} />,
+      <TextList list={[...row.tags].sort()} filtered={tagsFilter} clicked={tagFn} />,
       <Notes content={row.notes} related={row.related_assets} relatedFn={relatedFn} />
     ]
   }
