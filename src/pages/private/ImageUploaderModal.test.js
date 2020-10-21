@@ -10,6 +10,16 @@ it('processes filename front side', () => {
   )
 });
 
+it('processes filename without extra info', () => {
+  const obj = processFilename("70900 Zombie_A.png");
+  expect(obj).toEqual(
+    { number: "70900",
+      name: "Zombie",
+      side: "front"
+    }
+  )
+});
+
 it('processes filename back side', () => {
   const obj = processFilename("70900 Zombie_B[FANE,FDMS,SLS].png");
   expect(obj).toEqual(
@@ -29,6 +39,7 @@ it('processes filename name with spaces side', () => {
     }
   )
 });
+
 
 it('fails for wrong number field', () => {
   const obj = processFilename("70a910 Zombie_dog_B[FANE,FDMS,SLS].png");
