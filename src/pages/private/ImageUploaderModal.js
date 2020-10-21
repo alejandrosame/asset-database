@@ -21,7 +21,7 @@ const maxMbFileSize = 10;
 const fileSelectorId = 'file-selector';
 
 
-const processFilename = (str) => {
+export const processFilename = (str) => {
   const validateNumber = (number) => {
     return /^\d+$/.test(number);
   }
@@ -41,11 +41,13 @@ const processFilename = (str) => {
     }
   }
 
+
   const out = {};
 
   try {
     const noExtension = str.split(".")[0];
-    const [number, noNumber] = noExtension.split(" ");
+    const noExtraInfo = noExtension.split("[")[0];
+    const [number, noNumber] = noExtraInfo.split(" ");
     const nameWithSide = noNumber.split("_");
     const side = nameWithSide.pop();
     const name = nameWithSide.join(" ");
